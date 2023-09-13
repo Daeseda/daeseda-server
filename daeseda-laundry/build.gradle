@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.15'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'org.jetbrains.kotlin.jvm' version '1.9.20-Beta'
 }
 
 group = 'laundry'
@@ -34,4 +35,7 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+kotlin {
+	jvmToolchain(11)
 }
