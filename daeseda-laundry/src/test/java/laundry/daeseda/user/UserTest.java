@@ -2,7 +2,8 @@ package laundry.daeseda.user;
 
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.service.user.UserService;;
-import org.junit.jupiter.api.Test; // 동작하던 코드
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
