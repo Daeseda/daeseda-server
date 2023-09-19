@@ -4,7 +4,11 @@ import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +23,37 @@ public class UserServiceImpl implements UserService {
         else
             return 0;
     }
+    // BCryptPasswordEncoder 암호화 추가 예정
+
+    @Override
+    public UserDto read(Long userId) {
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
+        UserEntity userEntity = optionalUserEntity.orElseThrow(() -> new NoSuchElementException("해당 사용자가 없습니다."));
+        return UserDto.builder()
+                .userId(userEntity.getUserId())
+                .userEmail(userEntity.getUserEmail())
+                .userName(userEntity.getUserName())
+                .userNickname(userEntity.getUserNickname())
+                .build();
+    }
+
+    @Override
+    public int update(UserDto userDto) {
+        UserEntity userEntity = dtoToEntity(userDto);
+        if(userRepository.save(userEntity) != null) // 저장 성공
+            return 1;
+        else
+            return 0;
+    }
 
     @Override
     public int delete(Long userId) {
-        userRepository.deleteById(userId);
-        return 1;
+        try {
+            userRepository.deleteById(userId);
+            return 1;
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
     }
+
 }
