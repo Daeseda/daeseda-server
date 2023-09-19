@@ -5,8 +5,7 @@ import laundry.daeseda.entity.user.UserEntity;
 
 public interface UserService {
     int register(UserDto userDto);
-    UserDto read(UserDto userDto);
-    int delete(UserDto userDto);
+    int delete(Long userId);
 
     default UserEntity dtoToEntity(UserDto userDto){
         UserEntity entity = UserEntity.builder()

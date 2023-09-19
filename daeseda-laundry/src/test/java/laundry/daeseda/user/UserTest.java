@@ -39,18 +39,10 @@ public class UserTest {
     public void deleteUser() {
         IntStream.rangeClosed(2, 101)
                 .forEach(i -> {
-                    UserDto userDto = UserDto.builder()
-                            .userId(1L + i)
-                            .userName("minwook" + i)
-                            .userPhone("0105" + i)
-                            .userNickname("min" + i)
-                            .userEmail("email" + i + "@daeseda.com")
-                            .userPassword("pw" + i)
-                            .build();
-                    if (userService.delete(userDto) > 0) {
-                        System.out.println("삭제 성공");
+                    if (userService.delete(1L + i) > 0) {
+                        System.out.println("삭제 성공: " + i);
                     } else {
-                        System.out.println("삭제 실패");
+                        System.out.println("삭제 실패: " + i);
                     }
                 });
     }
