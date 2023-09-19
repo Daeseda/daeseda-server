@@ -6,12 +6,15 @@ import laundry.daeseda.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.NoSuchElementException;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -40,8 +43,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int update(UserDto userDto) {
         UserEntity userEntity = dtoToEntity(userDto);
-        if(userRepository.save(userEntity) != null) // 저장 성공
+        if(userRepository.findById(userEntity.getUserId()) != null){
+            userRepository.save(userEntity);
             return 1;
+        }
         else
             return 0;
     }
