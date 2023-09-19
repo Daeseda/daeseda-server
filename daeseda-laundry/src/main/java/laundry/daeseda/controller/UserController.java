@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<String> createMember(@RequestBody UserDto userDto) { //register 호출
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) { //register 호출
         String message = "ok";
         System.out.println(userDto.getUserNickname());
         System.out.println(userDto.getUserPhone());
@@ -36,6 +36,14 @@ public class UserController {
         System.out.println(userDto.getUserEmail());
         System.out.println(userDto.getUserPassword());
         userService.register(userDto);
+        return ResponseEntity.ok().body(message);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(@RequestBody UserDto userDto) {
+        String message = "ok";
+        System.out.println(userDto.getUserId());
+        userService.delete(userDto);
         return ResponseEntity.ok().body(message);
     }
 }

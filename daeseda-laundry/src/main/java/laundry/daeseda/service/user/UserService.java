@@ -5,27 +5,29 @@ import laundry.daeseda.entity.user.UserEntity;
 
 public interface UserService {
     int register(UserDto userDto);
+    UserDto read(UserDto userDto);
+    int delete(UserDto userDto);
 
     default UserEntity dtoToEntity(UserDto userDto){
         UserEntity entity = UserEntity.builder()
-                .id(userDto.getUserId())
-                .name(userDto.getUserName())
-                .nickname(userDto.getUserNickname())
-                .phone(userDto.getUserPhone())
-                .email(userDto.getUserEmail())
-                .password(userDto.getUserPassword())
+                .userId(userDto.getUserId())
+                .userName(userDto.getUserName())
+                .userNickname(userDto.getUserNickname())
+                .userPhone(userDto.getUserPhone())
+                .userEmail(userDto.getUserEmail())
+                .userPassword(userDto.getUserPassword())
                 .build();
         return entity;
     }
 
     default UserDto entityToDto(UserEntity userEntity){
         UserDto dto = UserDto.builder()
-                .userId(userEntity.getId())
-                .userName(userEntity.getName())
-                .userNickname(userEntity.getNickname())
-                .userPhone(userEntity.getPhone())
-                .userEmail(userEntity.getEmail())
-                .userPassword(userEntity.getPassword())
+                .userId(userEntity.getUserId())
+                .userName(userEntity.getUserName())
+                .userNickname(userEntity.getUserNickname())
+                .userPhone(userEntity.getUserPhone())
+                .userEmail(userEntity.getUserEmail())
+                .userPassword(userEntity.getUserPassword())
                 .build();
         return dto;
     }

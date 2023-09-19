@@ -18,20 +18,20 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @Column(unique = true)
-    private String email;
+    private String userEmail;
 
     @Column
-    private String name;
+    private String userName;
 
     @Column
-    private String nickname;
+    private String userNickname;
 
     @Column
-    private String phone;
+    private String userPhone;
 
     @Column
-    private String password;
+    private String userPassword;
 }
