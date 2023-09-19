@@ -17,7 +17,7 @@ public class UserTest {
 
     @Test
     public void registerUser() {
-        IntStream.rangeClosed(2, 101)
+        IntStream.rangeClosed(0, 1000)
                 .forEach(i -> {
                     UserDto userDto = UserDto.builder()
                             .userId(1L + i)
@@ -37,7 +37,7 @@ public class UserTest {
 
     @Test
     public void deleteUser() {
-        IntStream.rangeClosed(2, 101)
+        IntStream.rangeClosed(1000, 1000)
                 .forEach(i -> {
                     if (userService.delete(1L + i) > 0) {
                         System.out.println("삭제 성공: " + i);

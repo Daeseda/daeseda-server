@@ -35,7 +35,7 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
