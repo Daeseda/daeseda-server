@@ -26,7 +26,7 @@ public class UserEntity {
     @Column
     private String userName;
 
-    @Column
+    @Column(unique = true)
     private String userNickname;
 
     @Column
