@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,20 +32,33 @@ public class UserController {
     // HttpStatus.OK (200) - Get 요청
 
     @PostMapping("/register")
-    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) { //register 호출
+    public ResponseEntity<String> createUser(@RequestBody @Valid UserDto userDto) { //register 호출
         String message = "ok";
-        System.out.println(userDto.getUserNickname());
-        System.out.println(userDto.getUserPhone());
-        System.out.println(userDto.getUserName());
-        System.out.println(userDto.getUserEmail());
-        System.out.println(userDto.getUserPassword());
         userService.register(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     // HttpStatus.CREATED (201), HttpStatus.OK (200) - Post 요청
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> readUser(@PathVariable @Positive Long userId) {
+        UserDto userDto = userService.read(userId);
+        return ResponseEntity.ok().body(userDto);
+    }
+    // HttpStatus.OK (200) - Get 요청
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> updateUser(@RequestBody @Valid UserDto userDto) {
+        if (userService.update(userDto) > 0) {
+            return ResponseEntity.ok().body("User updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+    }
+    // HttpStatus.OK (200)을 반환 - Put 요청(성공)
+    // HttpStatus.NOT_FOUND (404) - Put 요청(실패)
+
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<String> deleteUser(@PathVariable @Positive Long userId) {
         if (userService.delete(userId) > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully.");
         } else {
