@@ -9,9 +9,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserDto {
     private Long userId;
-    private String userName;
-    private String userPhone;
-    private String userNickname;
     private String userEmail;
+    private String userName;
+    private String userNickname;
+    private String userPhone;
     private String userPassword;
 }
