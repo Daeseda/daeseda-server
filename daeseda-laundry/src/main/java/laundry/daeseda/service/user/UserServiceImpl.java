@@ -21,16 +21,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto read(UserDto userDto) {
-        UserEntity userEntity = userRepository.getById(userDto.getUserId());
-        UserDto user = entityToDto(userEntity);
-        return user;
-    }
-
-    @Override
-    public int delete(UserDto userDto) {
-        UserEntity userEntity = dtoToEntity(userDto);
-        userRepository.deleteById(userEntity.getUserId());
+    public int delete(Long userId) {
+        userRepository.deleteById(userId);
         return 1;
     }
 }
