@@ -17,8 +17,8 @@ public class ClothesController {
     private final ClothesService clothesService;
 
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createClothes(@RequestBody ClothesDTO clothesDTO) {
+    @PostMapping("/register")
+    public ResponseEntity<String> registerClothes(@RequestBody ClothesDTO clothesDTO) {
         clothesService.createClothes(clothesDTO);
         return ResponseEntity.ok().build();
     }
@@ -39,13 +39,13 @@ public class ClothesController {
         return ResponseEntity.ok().body(clothesDTOList);
     }
 
-    @DeleteMapping("/delete/{clothesId}")
+    @DeleteMapping("/{clothesId}")
     public ResponseEntity<String> deleteClothes(@PathVariable Long clothesId) {
         clothesService.deleteClothes(clothesId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update/{clothesId}")
+    @PutMapping("/{clothesId}")
     public ResponseEntity<String> updateClothes(@PathVariable Long clothesId, @RequestBody ClothesDTO clothesDTO) {
         clothesService.updateClothes(clothesId, clothesDTO);
         return ResponseEntity.ok().build();
