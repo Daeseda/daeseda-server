@@ -4,14 +4,14 @@ import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.user.UserEntity;
 
 public interface UserService {
-    int register(UserDto userDto);
+    int signup(UserDto userDto);
+    UserDto getMyUserWithAuthorities();
+    UserDto getUserWithAuthorities(String userEmail);
     int delete(Long userId);
-    UserDto read(Long userId);
     int update(UserDto userDto);
 
     default UserEntity dtoToEntity(UserDto userDto){
         UserEntity entity = UserEntity.builder()
-                .userId(userDto.getUserId())
                 .userName(userDto.getUserName())
                 .userNickname(userDto.getUserNickname())
                 .userPhone(userDto.getUserPhone())
@@ -23,7 +23,6 @@ public interface UserService {
 
     default UserDto entityToDto(UserEntity userEntity){
         UserDto dto = UserDto.builder()
-                .userId(userEntity.getUserId())
                 .userName(userEntity.getUserName())
                 .userNickname(userEntity.getUserNickname())
                 .userPhone(userEntity.getUserPhone())

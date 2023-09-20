@@ -3,8 +3,10 @@ package laundry.daeseda.service.user;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.user.AuthorityEntity;
 import laundry.daeseda.entity.user.UserEntity;
-import laundry.daeseda.exception.DuplicateMemberException;
+import laundry.daeseda.exception.DuplicateUserException;
+import laundry.daeseda.exception.NotFoundUserException;
 import laundry.daeseda.repository.user.UserRepository;
+import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,9 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.NoSuchElementException;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public int register(UserDto userDto) {
+    public int signup(UserDto userDto) {
         if (userRepository.findOneWithAuthoritiesByUserEmail(userDto.getUserEmail()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+            throw new DuplicateUserException("이미 가입되어 있는 유저입니다.");
         }
 
         AuthorityEntity authorityEntity = AuthorityEntity.builder()
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService {
                 .userName(userDto.getUserName())
                 .userPhone(userDto.getUserPhone())
                 .userEmail(userDto.getUserEmail())
-                .userPassword(userDto.getUserPassword())
+                .userPassword(passwordEncoder.encode(userDto.getUserPassword()))
                 .authorities(Collections.singleton(authorityEntity))
                 .activated(true)
                 .build();
@@ -51,16 +50,18 @@ public class UserServiceImpl implements UserService {
     }
     // BCryptPasswordEncoder 암호화 추가 예정
 
-    @Override
-    public UserDto read(Long userId) {
-        Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
-        UserEntity userEntity = optionalUserEntity.orElseThrow(() -> new NoSuchElementException("해당 사용자가 없습니다."));
-        return UserDto.builder()
-                .userId(userEntity.getUserId())
-                .userEmail(userEntity.getUserEmail())
-                .userName(userEntity.getUserName())
-                .userNickname(userEntity.getUserNickname())
-                .build();
+    @Transactional(readOnly = true)
+    public UserDto getUserWithAuthorities(String userEmail) {
+        return UserDto.from(userRepository.findOneWithAuthoritiesByUserEmail(userEmail).orElse(null));
+    }
+
+    @Transactional(readOnly = true)
+    public UserDto getMyUserWithAuthorities() {
+        return UserDto.from(
+                SecurityUtil.getCurrentUsername()
+                        .flatMap(userRepository::findOneWithAuthoritiesByUserEmail)
+                        .orElseThrow(() -> new NotFoundUserException("Member not found"))
+        );
     }
 
     @Override

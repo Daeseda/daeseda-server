@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/register")
-    public ResponseEntity<List<String>> getRegister() { //register 호출
+    @GetMapping("/signup")
+    public ResponseEntity<List<String>> getSignup() { //register 호출
         String result = "userNickname userName userPhone userEmail userPassword";
         String[] userArray = result.split(" ");
         List<String> userList = new ArrayList<>();
@@ -32,19 +33,18 @@ public class UserController {
     }
     // HttpStatus.OK (200) - Get 요청
 
-    @PostMapping("/register")
-    public ResponseEntity<String> createUser(@RequestBody @Valid UserDto userDto) { //register 호출
+    @PostMapping("/signup")
+    public ResponseEntity<String> signupUser(@RequestBody @Valid UserDto userDto) { //register 호출
         String message = "ok";
-        userService.register(userDto);
+        userService.signup(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     // HttpStatus.CREATED (201), HttpStatus.OK (200) - Post 요청
 
     @GetMapping("")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public ResponseEntity<UserDto> readUser(@PathVariable @Positive Long userId) {
-        UserDto userDto = userService.read(userId);
-        return ResponseEntity.ok().body(userDto);
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<UserDto> getMyUserInfo() {
+        return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
     // HttpStatus.OK (200) - Get 요청
 
