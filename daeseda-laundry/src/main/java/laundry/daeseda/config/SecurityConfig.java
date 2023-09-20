@@ -48,7 +48,8 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .antMatchers("/users/**", "/users/authenticate").permitAll()
+                        .antMatchers("/users/**", "/users/authenticate", "/category/**", "/clothes/**").permitAll()
+                        .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

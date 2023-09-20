@@ -1,5 +1,8 @@
 package laundry.daeseda.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import laundry.daeseda.dto.category.CategoryDTO;
 import laundry.daeseda.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -10,18 +13,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Api(tags = {"카테고리 API 정보를 제공하는 Controller"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @ApiOperation(value = "카테고리 전체 목록을 반환하는 메서드")
     @GetMapping("/list")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categories = categoryService.getAllCategories();
         return ResponseEntity.ok().body(categories);
     }
 
+    @ApiOperation(value = "특정 카테고리를 반환하는 메서드")
+    @ApiImplicitParam(name = "categoryId", value = "카테고리 ID")
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryDTO> getCategory(@PathVariable Long categoryId) {
         CategoryDTO category = categoryService.getCategoryById(categoryId).orElse(null);
@@ -32,6 +39,8 @@ public class CategoryController {
         }
     }
 
+    @ApiOperation(value = "카테고리를 생성하는 메서드")
+    @ApiImplicitParam(name = "categoryDTO", value = "카테고리명")
     @PostMapping("/register")
     public ResponseEntity<Void> registerCategory(@RequestBody CategoryDTO categoryDTO) {
         categoryService.createCategory(categoryDTO);
@@ -39,6 +48,8 @@ public class CategoryController {
         // CREATED - 201(생성시 보내는 요청)
     }
 
+    @ApiOperation(value = "특정 카테고리를 수정하는 메서드")
+    @ApiImplicitParam(name = "categoryDTO", value = "카테고리 ID, 카테고리명")
     @PutMapping("/{categoryId}")
     public ResponseEntity<String> updateCategory(@RequestBody CategoryDTO categoryDTO) {
         if(categoryService.updateCategory(categoryDTO) > 0) {
@@ -49,6 +60,8 @@ public class CategoryController {
         }   // NOT_FOUND : 404(실패시 보내는 요청)
     }
 
+    @ApiOperation(value = "특정 카테고리를 삭제하는 메서드")
+    @ApiImplicitParam(name = "categoryId", value = "카테고리 ID")
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         if(categoryService.deleteCategory(categoryId) > 0) {
