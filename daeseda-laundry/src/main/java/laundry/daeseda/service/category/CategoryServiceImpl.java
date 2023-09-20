@@ -30,41 +30,60 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Optional<CategoryDTO> getCategoryById(Long categoryId) {
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
-        if (categoryEntity.isPresent()) {
-            CategoryDTO categoryDTO = convertToDTO(categoryEntity.get());
-            return Optional.of(categoryDTO);
-        } else {
-            return Optional.empty();
+        try {
+            Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
+            if (categoryEntity.isPresent()) {
+                CategoryDTO categoryDTO = convertToDTO(categoryEntity.get());
+                return Optional.of(categoryDTO);
+            } else {
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            // 데이터베이스 조회 중 예외 발생 시 처리
+            throw new RuntimeException("해당 카테고리가 없음", e);
         }
     }
 
     @Override
-    public void createCategory(CategoryDTO categoryDTO) {
+    public int createCategory(CategoryDTO categoryDTO) {
 //        CategoryEntity categoryEntity = CategoryEntity.builder()
 //                .name(categoryDTO.getCategoryName())
 //                .build();
         CategoryEntity categoryEntity = convertToEntity(categoryDTO);
-        categoryRepository.save(categoryEntity);
+        if(categoryRepository.save(categoryEntity) != null) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+
     }
 
     @Override
-    public void updateCategory(Long categoryId, CategoryDTO categoryDTO) {
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
+    public int updateCategory(CategoryDTO categoryDTO) {
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryDTO.getCategoryId());
         if(categoryEntity.isPresent()) {
             CategoryEntity category = categoryEntity.get();
+            category.setName(categoryDTO.getCategoryName());
 
-            category = CategoryEntity.builder()
-                    .id(category.getId())
-                    .name(categoryDTO.getCategoryName())
-                    .build();
-
-            categoryRepository.save(category);
+            try {
+                categoryRepository.save(category);
+                return 1; // 업데이트 성공
+            } catch (Exception e) {
+                // 업데이트 중 에러 발생 시 예외 처리
+                return 0; // 업데이트 실패
+            }
         }
+        return 0;
     }
 
     @Override
-    public void deleteCategory(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
+    public int deleteCategory(Long categoryId) {
+        try {
+            categoryRepository.deleteById(categoryId);
+            return 1; // 삭제 성공 시 1 반환
+        } catch (Exception e) {
+            return 0; // 삭제 실패 시 0 반환
+        }
     }
 }

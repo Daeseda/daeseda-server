@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface CategoryService {
     List<CategoryDTO> getAllCategories();
     Optional<CategoryDTO> getCategoryById(Long categoryId);
-    void createCategory(CategoryDTO categoryDTO);
-    void updateCategory(Long categoryId, CategoryDTO categoryDTO);
-    void deleteCategory(Long categoryId);
+    int createCategory(CategoryDTO categoryDTO);
+    int updateCategory(CategoryDTO categoryDTO);
+    int deleteCategory(Long categoryId);
 
 
     default CategoryEntity convertToEntity(CategoryDTO categoryDTO) {

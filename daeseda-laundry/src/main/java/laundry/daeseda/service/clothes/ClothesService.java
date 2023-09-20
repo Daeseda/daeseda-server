@@ -8,15 +8,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClothesService {
-    void createClothes(ClothesDTO clothesDTO);
-
-    Optional<ClothesDTO> getClothesById(Long clothesId);
 
     List<ClothesDTO> getAllClothes();
 
-    void deleteClothes(Long clothesId);
+    Optional<ClothesDTO> getClothesById(Long clothesId);
 
-    void updateClothes(Long clothesId, ClothesDTO clothesDTO);
+    int createClothes(ClothesDTO clothesDTO);
+
+    int updateClothes(ClothesDTO clothesDTO);
+
+    int deleteClothes(Long clothesId);
 
     default ClothesEntity convertToEntity(ClothesDTO clothesDTO) {
         CategoryEntity categoryEntity = CategoryEntity.builder()
