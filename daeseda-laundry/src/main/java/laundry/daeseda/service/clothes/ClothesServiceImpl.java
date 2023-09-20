@@ -18,27 +18,6 @@ import java.util.Optional;
 public class ClothesServiceImpl implements ClothesService {
     private final ClothesRepository clothesRepository;
     private final CategoryRepository categoryRepository;
-    @Override
-    public void createClothes(ClothesDTO clothesDTO) {
-//        CategoryEntity categoryEntity = categoryRepository.findById(clothesDTO.getCategoryId())
-//        ClothesEntity clothesEntity = ClothesEntity.builder()
-//                .name(clothesDTO.getClothesName())
-//                .category(categoryEntity)
-//                .build();
-        ClothesEntity clothesEntity = convertToEntity(clothesDTO);
-        clothesRepository.save(clothesEntity);
-    }
-
-    @Override
-    public Optional<ClothesDTO> getClothesById(Long id) {
-        Optional<ClothesEntity> clothesEntity = clothesRepository.findById(id);
-        if (clothesEntity.isPresent()) {
-            ClothesDTO clothesDTO = convertToDTO(clothesEntity.get());
-            return Optional.of(clothesDTO);
-        } else {
-            return Optional.empty();
-        }
-    }
 
     @Override
     public List<ClothesDTO> getAllClothes() {
@@ -52,22 +31,61 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public void deleteClothes(Long clothesId) {
-        clothesRepository.deleteById(clothesId);
+    public Optional<ClothesDTO> getClothesById(Long id) {
+        try {
+            Optional<ClothesEntity> clothesEntity = clothesRepository.findById(id);
+            if (clothesEntity.isPresent()) {
+                ClothesDTO clothesDTO = convertToDTO(clothesEntity.get());
+                return Optional.of(clothesDTO);
+            } else {
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("해당 의류가 없음", e);
+        }
     }
 
     @Override
-    public void updateClothes(Long clothesId, ClothesDTO clothesDTO) {
-        Optional<ClothesEntity> clothesEntity = clothesRepository.findById(clothesId);
+    public int createClothes(ClothesDTO clothesDTO) {
+//        CategoryEntity categoryEntity = categoryRepository.findById(clothesDTO.getCategoryId())
+//        ClothesEntity clothesEntity = ClothesEntity.builder()
+//                .name(clothesDTO.getClothesName())
+//                .category(categoryEntity)
+//                .build();
+        ClothesEntity clothesEntity = convertToEntity(clothesDTO);
+        if(clothesRepository.save(clothesEntity) != null) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int updateClothes(ClothesDTO clothesDTO) {
+        Optional<ClothesEntity> clothesEntity = clothesRepository.findById(clothesDTO.getClothesId());
         if(clothesEntity.isPresent()) {
             ClothesEntity clothes = clothesEntity.get();
-            clothes = ClothesEntity.builder()
-                    .id(clothes.getId())
-                    .name(clothesDTO.getClothesName())
-                    .category(clothes.getCategory())
-                    .build();
+            clothes.setName(clothesDTO.getClothesName());
 
-            clothesRepository.save(clothes);
+            try {
+                clothesRepository.save(clothes);
+                return 1; // 업데이트 성공
+            } catch (Exception e) {
+                // 업데이트 중 에러 발생 시 예외 처리
+                return 0; // 업데이트 실패
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int deleteClothes(Long clothesId) {
+        try {
+            clothesRepository.deleteById(clothesId);
+            return 1; // 삭제 성공 시 1 반환
+        } catch (Exception e) {
+            return 0; // 삭제 실패 시 0 반환
         }
     }
 }
