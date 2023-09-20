@@ -61,20 +61,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public int updateCategory(CategoryDTO categoryDTO) {
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryDTO.getCategoryId());
-        if(categoryEntity.isPresent()) {
-            CategoryEntity category = categoryEntity.get();
-            category.setName(categoryDTO.getCategoryName());
-
-            try {
-                categoryRepository.save(category);
-                return 1; // 업데이트 성공
-            } catch (Exception e) {
-                // 업데이트 중 에러 발생 시 예외 처리
-                return 0; // 업데이트 실패
-            }
+        CategoryEntity categoryEntity = convertToEntity(categoryDTO);
+        if(categoryEntity != null) {
+            categoryRepository.save(categoryEntity);
+            return 1;
         }
-        return 0;
+        else {
+            return 0;
+        }
     }
 
     @Override

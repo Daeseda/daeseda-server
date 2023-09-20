@@ -63,18 +63,10 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public int updateClothes(ClothesDTO clothesDTO) {
-        Optional<ClothesEntity> clothesEntity = clothesRepository.findById(clothesDTO.getClothesId());
-        if(clothesEntity.isPresent()) {
-            ClothesEntity clothes = clothesEntity.get();
-            clothes.setName(clothesDTO.getClothesName());
-
-            try {
-                clothesRepository.save(clothes);
-                return 1; // 업데이트 성공
-            } catch (Exception e) {
-                // 업데이트 중 에러 발생 시 예외 처리
-                return 0; // 업데이트 실패
-            }
+        ClothesEntity clothesEntity = convertToEntity(clothesDTO);
+        if(clothesEntity != null) {
+            clothesRepository.save(clothesEntity);
+            return 1;
         }
         return 0;
     }
