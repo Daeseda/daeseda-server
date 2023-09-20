@@ -1,18 +1,20 @@
 package laundry.daeseda.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import laundry.daeseda.entity.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
 @AllArgsConstructor
 public class UserDto {
-    private Long userId;
 
     @NotNull
     @Size(min = 3, max = 50)
@@ -26,4 +28,20 @@ public class UserDto {
     @NotNull
     @Size(min = 3, max = 100)
     private String userPassword;
+
+    private Set<AuthorityDto> authorityDtoSet;
+
+    public static UserDto from(UserEntity user) {
+        if(user == null) return null;
+
+        return UserDto.builder()
+                .userName(user.getUserName())
+                .userNickname(user.getUserNickname())
+                .userPhone(user.getUserPhone())
+                .userEmail(user.getUserEmail())
+                .authorityDtoSet(user.getAuthorities().stream()
+                        .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
+                        .collect(Collectors.toSet()))
+                .build();
+    }
 }
