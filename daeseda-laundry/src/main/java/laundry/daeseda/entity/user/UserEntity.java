@@ -18,8 +18,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserEntity {
 
-    @JsonIgnore
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
@@ -42,10 +42,10 @@ public class UserEntity {
     @Column
     private boolean activated;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
-    private Set<AuthorityEntity> authority;
+    private Set<AuthorityEntity> authorities;
 }

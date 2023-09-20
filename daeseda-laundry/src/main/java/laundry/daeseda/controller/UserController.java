@@ -5,6 +5,7 @@ import laundry.daeseda.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,14 +40,16 @@ public class UserController {
     }
     // HttpStatus.CREATED (201), HttpStatus.OK (200) - Post 요청
 
-    @GetMapping("/{userId}")
+    @GetMapping("")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<UserDto> readUser(@PathVariable @Positive Long userId) {
         UserDto userDto = userService.read(userId);
         return ResponseEntity.ok().body(userDto);
     }
     // HttpStatus.OK (200) - Get 요청
 
-    @PutMapping("/{userId}")
+    @PutMapping("")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<String> updateUser(@RequestBody @Valid UserDto userDto) {
         if (userService.update(userDto) > 0) {
             return ResponseEntity.ok().body("User updated successfully.");
@@ -57,7 +60,8 @@ public class UserController {
     // HttpStatus.OK (200)을 반환 - Put 요청(성공)
     // HttpStatus.NOT_FOUND (404) - Put 요청(실패)
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable @Positive Long userId) {
         if (userService.delete(userId) > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully.");

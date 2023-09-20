@@ -21,21 +21,22 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findOneWithAuthoritiesByUsername(username)
-                .map(user -> createUser(username, user))
-                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+        return userRepository.findOneWithAuthoritiesByUserEmail(userEmail)
+                .map(user -> createUser(userEmail, user))
+                .orElseThrow(() -> new UsernameNotFoundException(userEmail + " -> 데이터베이스에서 찾을 수 없습니다."));
     }
 
-    private org.springframework.security.core.userdetails.User createUser(String username, UserEntity user) {
-        if (!user.isActivated()) {
-            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
+    private org.springframework.security.core.userdetails.User createUser(String userEmail, UserEntity userEntity) {
+        if (!userEntity.isActivated()) {
+            throw new RuntimeException(userEmail + " -> 활성화되어 있지 않습니다.");
         }
-        List<GrantedAuthority> grantedAuthorities = user.getAuthority().stream()
+        List<GrantedAuthority> grantedAuthorities = userEntity.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getUserName(),
-                user.getUserPassword(),
+
+        return new org.springframework.security.core.userdetails.User(userEntity.getUserName(),
+                userEntity.getUserPassword(),
                 grantedAuthorities);
     }
 }
