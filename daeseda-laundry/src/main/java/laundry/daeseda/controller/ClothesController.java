@@ -1,5 +1,8 @@
 package laundry.daeseda.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import laundry.daeseda.dto.clothes.ClothesDTO;
 import laundry.daeseda.service.clothes.ClothesService;
 import lombok.RequiredArgsConstructor;
@@ -10,18 +13,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Api(tags = {"의류 API 정보를 제공하는 Controller"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/clothes")
 public class ClothesController {
     private final ClothesService clothesService;
 
+    @ApiOperation(value = "의류 전체 목록을 반환하는 메서드")
     @GetMapping("/list")
     public ResponseEntity<List<ClothesDTO>> getAllClothes() {
         List<ClothesDTO> clothesDTOList = clothesService.getAllClothes();
         return ResponseEntity.ok().body(clothesDTOList);
     }
 
+    @ApiOperation(value = "특정 의류를 반환하는 메서드")
+    @ApiImplicitParam(name = "clothesId", value = "의류 ID")
     @GetMapping("/{clothesId}")
     public ResponseEntity<ClothesDTO> getClothes(@PathVariable Long clothesId) {
         ClothesDTO clothesDTO = clothesService.getClothesById(clothesId).orElse(null);
@@ -32,12 +39,16 @@ public class ClothesController {
         }
     }
 
+    @ApiOperation(value = "의류 생성하는 메서드")
+    @ApiImplicitParam(name = "clothesDTO", value = "카테고리 ID, 의류명")
     @PostMapping("/register")
     public ResponseEntity<String> registerClothes(@RequestBody ClothesDTO clothesDTO) {
         clothesService.createClothes(clothesDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @ApiOperation(value = "특정 의류를 수정하는 메서드")
+    @ApiImplicitParam(name = "clothesDTO", value = "의류 ID,카테고리 ID,카테고리명")
     @PutMapping("/{clothesId}")
     public ResponseEntity<String> updateClothes(@RequestBody ClothesDTO clothesDTO) {
         if(clothesService.updateClothes(clothesDTO) > 0) {
@@ -48,6 +59,8 @@ public class ClothesController {
         }   // NOT_FOUND : 404(실패시 보내는 요청)
     }
 
+    @ApiOperation(value = "특정 의류를 삭제하는 메서드")
+    @ApiImplicitParam(name = "clothesId", value = "의류 ID")
     @DeleteMapping("/{clothesId}")
     public ResponseEntity<String> deleteClothes(@PathVariable Long clothesId) {
         if(clothesService.deleteClothes(clothesId) > 0) {
