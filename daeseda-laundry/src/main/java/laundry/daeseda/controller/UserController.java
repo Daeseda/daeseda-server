@@ -41,14 +41,14 @@ public class UserController {
     }
     // HttpStatus.CREATED (201), HttpStatus.OK (200) - Post 요청
 
-    @GetMapping("")
+    @GetMapping("/myInfo")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<UserDto> getMyUserInfo() {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
     // HttpStatus.OK (200) - Get 요청
 
-    @PutMapping("")
+    @PutMapping("update")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<String> updateUser(@RequestBody @Valid UserDto userDto) {
         if (userService.update(userDto) > 0) {
@@ -60,7 +60,7 @@ public class UserController {
     // HttpStatus.OK (200)을 반환 - Put 요청(성공)
     // HttpStatus.NOT_FOUND (404) - Put 요청(실패)
 
-    @DeleteMapping("")
+    @DeleteMapping("delete")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable @Positive Long userId) {
         if (userService.delete(userId) > 0) {

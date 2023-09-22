@@ -16,18 +16,17 @@ public class UserTest {
     private UserService userService;
 
     @Test
-    public void registerUser() {
+    public void signupUser() {
         IntStream.rangeClosed(0, 10)
                 .forEach(i -> {
                     UserDto userDto = UserDto.builder()
-                            .userId(1L + i)
                             .userName("minwook" + i)
                             .userPhone("0105" + i)
                             .userNickname("min" + i)
                             .userEmail("email" + i + "@daeseda.com")
                             .userPassword("pw" + i)
                             .build();
-                    if (userService.register(userDto) > 0) {
+                    if (userService.signup(userDto) > 0) {
                         System.out.println("등록 성공: " + i);
                     } else {
                         System.out.println("등록 실패: " + i);
@@ -35,23 +34,12 @@ public class UserTest {
                 });
     }
 
-    @Test
-    public void readUser() {
-        IntStream.rangeClosed(1003, 1013)
-                .forEach(i -> {
-                    UserDto userDto = userService.read(1L + i);
-                    System.out.println(userDto.getUserId());
-                    System.out.println(userDto.getUserName());
-                    System.out.println(userDto.getUserEmail());
-                });
-    }
 
     @Test
     public void updateUser() {
         IntStream.rangeClosed(1003, 1013)
                 .forEach(i -> {
                     UserDto userDto = UserDto.builder()
-                            .userId(1L + i)
                             .userNickname(i + "min")
                             .userName(i + "minwook")
                             .userPhone(i + "0105")

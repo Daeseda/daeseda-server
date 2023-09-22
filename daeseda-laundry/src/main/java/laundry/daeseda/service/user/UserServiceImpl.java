@@ -51,16 +51,17 @@ public class UserServiceImpl implements UserService {
     // BCryptPasswordEncoder 암호화 추가 예정
 
     @Transactional(readOnly = true)
-    public UserDto getUserWithAuthorities(String userEmail) {
-        return UserDto.from(userRepository.findOneWithAuthoritiesByUserEmail(userEmail).orElse(null));
+    public UserDto getUserWithAuthorities(String userName) {
+        return UserDto.from(userRepository.findOneWithAuthoritiesByUserName(userName).orElse(null));
     }
 
     @Transactional(readOnly = true)
     public UserDto getMyUserWithAuthorities() {
+        System.out.println(SecurityUtil.getCurrentUsername().get());
         return UserDto.from(
                 SecurityUtil.getCurrentUsername()
-                        .flatMap(userRepository::findOneWithAuthoritiesByUserEmail)
-                        .orElseThrow(() -> new NotFoundUserException("Member not found"))
+                        .flatMap(userRepository::findOneWithAuthoritiesByUserName)
+                        .orElseThrow(() -> new NotFoundUserException("User not found"))
         );
     }
 
