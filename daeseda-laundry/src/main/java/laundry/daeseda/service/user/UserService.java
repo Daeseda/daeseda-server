@@ -1,13 +1,15 @@
 package laundry.daeseda.service.user;
 
+import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.user.UserEntity;
 
 public interface UserService {
     int signup(UserDto userDto);
+    int signout();
     UserDto getMyUserWithAuthorities();
     UserDto getUserWithAuthorities(String userEmail);
-    int delete(Long userId);
+    int delete();
     int update(UserDto userDto);
 
     default UserEntity dtoToEntity(UserDto userDto){

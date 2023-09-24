@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    String message = "ok";
 
     private final UserService userService;
 
@@ -35,21 +37,27 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signupUser(@RequestBody @Valid UserDto userDto) { //register 호출
-        String message = "ok";
         userService.signup(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
     // HttpStatus.CREATED (201), HttpStatus.OK (200) - Post 요청
 
+    @PostMapping("/logout")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> logout() {
+        userService.signout();
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+    }
+
     @GetMapping("/myInfo")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<UserDto> getMyUserInfo() {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
     // HttpStatus.OK (200) - Get 요청
 
-    @PutMapping("update")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @PutMapping("/update")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> updateUser(@RequestBody @Valid UserDto userDto) {
         if (userService.update(userDto) > 0) {
             return ResponseEntity.ok().body("User updated successfully.");
@@ -60,10 +68,11 @@ public class UserController {
     // HttpStatus.OK (200)을 반환 - Put 요청(성공)
     // HttpStatus.NOT_FOUND (404) - Put 요청(실패)
 
-    @DeleteMapping("delete")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public ResponseEntity<String> deleteUser(@PathVariable @Positive Long userId) {
-        if (userService.delete(userId) > 0) {
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> deleteUser() {
+
+        if (userService.delete() > 0) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
