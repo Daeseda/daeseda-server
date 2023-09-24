@@ -1,5 +1,6 @@
 package laundry.daeseda.jwt;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;

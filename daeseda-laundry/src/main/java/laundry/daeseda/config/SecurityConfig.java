@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,10 +49,10 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .antMatchers("/users/**", "/users/authenticate", "/category/**", "/clothes/**").permitAll()
+                        .antMatchers("/users/**", "/category/**", "/clothes/**").permitAll()
                         .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
-                )
+                ) // .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement ->
@@ -61,5 +62,6 @@ public class SecurityConfig {
                 .apply(new JwtSecurityConfig(tokenProvider));
         return http.build();
     }
+
 }
 

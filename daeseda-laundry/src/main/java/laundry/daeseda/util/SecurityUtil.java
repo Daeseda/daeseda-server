@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.net.http.HttpHeaders;
 import java.util.Optional;
 
 public class SecurityUtil {
@@ -28,9 +29,9 @@ public class SecurityUtil {
         } else if (authentication.getPrincipal() instanceof String) {
             username = (String) authentication.getPrincipal();
         }
-
         return Optional.ofNullable(username);
     }
+
 }
 
 // 현재 사용자 식별: 현재 로그인한 사용자의 식별 정보를 얻음 - 사용자의 아이디, 이메일 또는 다른 식별자
