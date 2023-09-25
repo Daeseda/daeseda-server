@@ -1,6 +1,11 @@
 package laundry.daeseda.jwt;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -14,21 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Log4j2
+@RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public JwtFilter(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
-//    private final RedisTemplate<String, String> redisTemplate;
-//
-//    @Autowired
-//    public JwtFilter(TokenProvider tokenProvider, RedisTemplate<String, String> redisTemplate) {
-//        this.tokenProvider = tokenProvider;
-//        this.redisTemplate = redisTemplate;
-//    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -37,16 +34,13 @@ public class JwtFilter extends GenericFilterBean {
         String requestURI = httpServletRequest.getRequestURI();
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
+            String key = "JWT_TOKEN:" + tokenProvider.getUserPk(jwt);
+            String storedToken = (String) redisTemplate.opsForValue().get(key);
+            if(redisTemplate.hasKey(key) && storedToken != null) {
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-//            String key = "JWT_TOKEN:" + tokenProvider.getUserPk(jwt);
-//            String storedToken = redisTemplate.opsForValue().get(jwt);
-//            if(redisTemplate.hasKey(key) && storedToken != null) {
-//                Authentication authentication = tokenProvider.getAuthentication(jwt);
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
-//                log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-//            }
+            }
         } else {
             log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
