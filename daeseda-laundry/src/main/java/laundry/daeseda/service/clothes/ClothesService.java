@@ -21,11 +21,11 @@ public interface ClothesService {
 
     default ClothesEntity convertToEntity(ClothesDTO clothesDTO) {
         CategoryEntity categoryEntity = CategoryEntity.builder()
-                .id(clothesDTO.getCategoryId())
+                .categoryId(clothesDTO.getCategoryId())
                 .build();
         ClothesEntity clothesEntity = ClothesEntity.builder()
-                .id(clothesDTO.getClothesId())
-                .name(clothesDTO.getClothesName())
+                .clothesId(clothesDTO.getClothesId())
+                .clothesName(clothesDTO.getClothesName())
                 .category(categoryEntity)
                 .build();
         return clothesEntity;
@@ -33,9 +33,9 @@ public interface ClothesService {
 
     default ClothesDTO convertToDTO(ClothesEntity clothesEntity) {
         return ClothesDTO.builder()
-                .clothesId(clothesEntity.getId())
-                .clothesName(clothesEntity.getName())
-                .categoryId(clothesEntity.getCategory().getId())
+                .clothesId(clothesEntity.getClothesId())
+                .clothesName(clothesEntity.getClothesName())
+                .categoryId(clothesEntity.getCategory().getCategoryId())
                 .build();
     }
 }

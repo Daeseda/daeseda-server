@@ -14,10 +14,12 @@ import javax.persistence.*;
 @Table(name = "clothes")
 public class ClothesEntity {
     @Id
+    @Column(name = "clothes_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long clothesId;
 
-    private String name;
+    @Column
+    private String clothesName;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
