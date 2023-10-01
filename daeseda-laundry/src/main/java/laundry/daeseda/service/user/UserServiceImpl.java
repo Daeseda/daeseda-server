@@ -7,6 +7,7 @@ import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.exception.DuplicateUserException;
 import laundry.daeseda.exception.NotFoundUserException;
 import laundry.daeseda.jwt.TokenProvider;
+import laundry.daeseda.repository.user.AuthorityRepository;
 import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -35,9 +37,16 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateUserException("이미 가입되어 있는 유저입니다.");
         }
 
-        AuthorityEntity authorityEntity = AuthorityEntity.builder()
-                .authorityName("ROLE_USER")
-                .build();
+        String authorityName = "ROLE_USER";
+        AuthorityEntity authorityEntity = authorityRepository.findByAuthorityName(authorityName);
+
+        if (authorityEntity == null) {
+            // "ROLE_USER" 권한이 없으면 새로 생성
+            authorityEntity = AuthorityEntity.builder()
+                    .authorityName(authorityName)
+                    .build();
+            authorityRepository.save(authorityEntity);
+        }
 
         UserEntity userEntity = UserEntity.builder()
                 .userNickname(userDto.getUserNickname())

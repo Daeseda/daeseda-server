@@ -1,4 +1,4 @@
-package laundry.daeseda.dto.user;
+package laundry.daeseda.dto.address;
 
 import laundry.daeseda.entity.user.UserEntity;
 import lombok.Builder;
@@ -11,6 +11,7 @@ import javax.persistence.Column;
 
 @Builder
 public class AddressDto {
+    private Long addressId;
     private String addressName;
     private String addressDetail;
     private String addressZipcode;

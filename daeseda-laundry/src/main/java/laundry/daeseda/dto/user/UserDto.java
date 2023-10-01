@@ -32,7 +32,8 @@ public class UserDto {
     private Set<AuthorityDto> authorityDtoSet;
 
     public static UserDto from(UserEntity user) {
-        if(user == null) return null;
+        if(user == null)
+            return null;
 
         return UserDto.builder()
                 .userName(user.getUserName())
