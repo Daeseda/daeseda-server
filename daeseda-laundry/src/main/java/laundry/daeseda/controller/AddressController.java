@@ -1,8 +1,7 @@
 package laundry.daeseda.controller;
 
-import laundry.daeseda.dto.user.AddressDto;
-import laundry.daeseda.dto.user.AddressListDto;
-import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.dto.address.AddressDto;
+import laundry.daeseda.dto.address.AddressListDto;
 import laundry.daeseda.service.user.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,6 +33,16 @@ public class AddressController {
     public List<AddressListDto> getAddressList() {
         List<AddressListDto> addressList = addressService.getMyAddressList(); // 주소 목록을 가져오는 비즈니스 로직 호출
         return addressList;
+    }
+
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> deleteUser(@RequestBody @Valid AddressDto addressDto) {
+        if (addressService.delete(addressDto) > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Address deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found.");
+        }
     }
 
 }

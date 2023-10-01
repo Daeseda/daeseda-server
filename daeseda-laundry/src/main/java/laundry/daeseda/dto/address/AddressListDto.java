@@ -1,6 +1,5 @@
-package laundry.daeseda.dto.user;
+package laundry.daeseda.dto.address;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

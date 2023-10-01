@@ -1,10 +1,8 @@
 package laundry.daeseda.service.user;
 
-import laundry.daeseda.dto.user.AddressDto;
-import laundry.daeseda.dto.user.AddressListDto;
-import laundry.daeseda.entity.user.AddressEntity;
+import laundry.daeseda.dto.address.AddressDto;
+import laundry.daeseda.dto.address.AddressListDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface AddressService {
@@ -13,5 +11,5 @@ public interface AddressService {
 
     List<AddressListDto> getMyAddressList();
 
-
+    int delete(AddressDto addressDto);
 }

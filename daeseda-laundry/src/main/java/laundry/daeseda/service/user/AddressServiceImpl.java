@@ -1,8 +1,7 @@
 package laundry.daeseda.service.user;
 
-import laundry.daeseda.dto.user.AddressDto;
-import laundry.daeseda.dto.user.AddressListDto;
-import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.dto.address.AddressDto;
+import laundry.daeseda.dto.address.AddressListDto;
 import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.repository.user.AddressRepository;
@@ -13,10 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +55,7 @@ public class AddressServiceImpl implements AddressService {
 
         for (AddressEntity addressEntity : addressEntities) {
             AddressDto addressDto = AddressDto.builder()
+                    .addressId(addressEntity.getAddressId())
                     .addressName(addressEntity.getAddressName())
                     .addressZipcode(addressEntity.getAddressZipcode())
                     .addressDetail(addressEntity.getAddressDetail())
@@ -70,6 +67,12 @@ public class AddressServiceImpl implements AddressService {
         addressListDtos.add(addressListDto);
 
         return addressListDtos;
+    }
+
+    @Override
+    public int delete(AddressDto addressDto) {
+        addressRepository.deleteById(addressDto.getAddressId());
+        return 1;
     }
 
 
