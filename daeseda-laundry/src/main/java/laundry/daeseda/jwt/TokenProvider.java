@@ -55,7 +55,6 @@ public class TokenProvider implements InitializingBean {
         String username = userDetails.getUsername();
 
         return Jwts.builder()
-                //.setSubject(authentication.getName())
                 .setSubject(username)
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
