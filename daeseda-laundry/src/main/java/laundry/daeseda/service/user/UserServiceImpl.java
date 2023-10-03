@@ -1,5 +1,6 @@
 package laundry.daeseda.service.user;
 
+import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.user.AuthorityEntity;
@@ -112,6 +113,14 @@ public class UserServiceImpl implements UserService {
         }
         else
             return 0;
+    }
+
+    @Override
+    public boolean checkDuplicateEmail(EmailDto emailDto) {
+        if(!userRepository.findByUserEmail(emailDto.getUserEmail()).isPresent())
+            return true;
+        else
+            return false;
     }
 
     @Transactional
