@@ -17,15 +17,15 @@ public interface CategoryService {
 
     default CategoryEntity convertToEntity(CategoryDTO categoryDTO) {
         CategoryEntity categoryEntity = CategoryEntity.builder()
-                .id(categoryDTO.getCategoryId())
-                .name(categoryDTO.getCategoryName())
+                .categoryId(categoryDTO.getCategoryId())
+                .categoryName(categoryDTO.getCategoryName())
                 .build();
         return categoryEntity;
     }
     default CategoryDTO convertToDTO(CategoryEntity categoryEntity) {
         CategoryDTO categoryDTO = CategoryDTO.builder()
-                .categoryId(categoryEntity.getId())
-                .categoryName(categoryEntity.getName())
+                .categoryId(categoryEntity.getCategoryId())
+                .categoryName(categoryEntity.getCategoryName())
                 .build();
         return categoryDTO;
     }

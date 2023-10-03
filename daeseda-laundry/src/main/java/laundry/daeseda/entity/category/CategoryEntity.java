@@ -13,8 +13,10 @@ import javax.persistence.*;
 @Table(name = "category")
 public class CategoryEntity {
     @Id
+    @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long categoryId;
 
-    private String name;
+    @Column
+    private String categoryName;
 }
