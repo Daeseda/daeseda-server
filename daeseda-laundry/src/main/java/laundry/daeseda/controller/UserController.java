@@ -1,6 +1,9 @@
 package laundry.daeseda.controller;
 
+import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.entity.mail.MailEntity;
+import laundry.daeseda.service.mail.MailService;
 import laundry.daeseda.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,7 @@ public class UserController {
     String message = "ok";
 
     private final UserService userService;
+    private final MailService mailService;
 
     @GetMapping("/signup")
     public ResponseEntity<List<String>> getSignup() { //register 호출
@@ -80,4 +84,20 @@ public class UserController {
     }
     // HttpStatus.NO_CONTENT (204) - Delete 요청(성공)
     // HttpStatus.NOT_FOUND (404) - Delete 요청(실패)
+
+    @ResponseBody
+    @PostMapping("/mailAuthentication")
+    public ResponseEntity<String> mailAuthentication(@RequestBody EmailDto emailDto) throws Exception {
+        if(emailDto != null){
+            if(userService.checkDuplicateEmail(emailDto)) {
+                String code = mailService.sendMessage(emailDto.getUserEmail());
+                System.out.println("인증코드 : " + code);
+                return ResponseEntity.ok(code); // 200 OK with the code
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 이메일입니다."); // 409 Conflict
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("잘못된 형식입니다.");
+    }
+
 }
