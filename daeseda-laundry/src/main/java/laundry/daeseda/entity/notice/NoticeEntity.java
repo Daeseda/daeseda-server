@@ -1,5 +1,6 @@
 package laundry.daeseda.entity.notice;
 
+import laundry.daeseda.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @EnableJpaAuditing
 @Table(name = "notice")
 public class NoticeEntity {
+
     @Id
     @Column(name = "notice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +35,11 @@ public class NoticeEntity {
     @Column
     private String noticeContent;
 
-    @Column
     @CreatedDate
-    private LocalDateTime createDate;
+    @Column(name = "regDate", updatable = false)
+    private LocalDateTime regDate;
 
-    @Column
     @LastModifiedDate
-    private LocalDateTime updateDate;
+    @Column(name = "modDate")
+    private LocalDateTime modDate;
 }

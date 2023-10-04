@@ -21,8 +21,8 @@ public interface NoticeService {
                 .noticeCategory(noticeDTO.getNoticeCategory())
                 .noticeTitle(noticeDTO.getNoticeTitle())
                 .noticeContent(noticeDTO.getNoticeContent())
-                .createDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .regDate(LocalDateTime.now())
+                .modDate(LocalDateTime.now())
                 .build();
         return noticeEntity;
     }
@@ -33,6 +33,8 @@ public interface NoticeService {
                 .noticeCategory(noticeEntity.getNoticeCategory())
                 .noticeTitle(noticeEntity.getNoticeTitle())
                 .noticeContent(noticeEntity.getNoticeContent())
+                .regDate(noticeEntity.getRegDate())
+                .modDate(noticeEntity.getModDate())
                 .build();
         return noticeDTO;
     }
