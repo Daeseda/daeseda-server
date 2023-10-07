@@ -1,6 +1,5 @@
 package laundry.daeseda.controller;
 
-import antlr.Token;
 import laundry.daeseda.dto.user.LoginDto;
 import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.jwt.JwtFilter;
@@ -19,14 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
 public class AuthController {
-    private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider; // 토큰 생성자
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisTemplate<String, Object> redisTemplate;
 
