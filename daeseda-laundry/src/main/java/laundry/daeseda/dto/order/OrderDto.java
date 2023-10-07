@@ -3,6 +3,7 @@ package laundry.daeseda.dto.order;
 import laundry.daeseda.constant.OrderStatus;
 import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.clothes.ClothesDTO;
+import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.clothes.ClothesEntity;
 import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.UserEntity;
@@ -21,9 +22,9 @@ import java.util.Set;
 @NoArgsConstructor
 public class OrderDto {
 
-    private UserEntity user;
+    private UserDto user;
     private AddressDto address;
-//    private Set<ClothesDTO> clothes;
+    private Set<ClothesDTO> clothes;
 
     private OrderStatus orderStatus;
     private int totalPrice;

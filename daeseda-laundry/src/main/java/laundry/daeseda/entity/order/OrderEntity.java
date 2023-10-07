@@ -35,13 +35,13 @@ public class OrderEntity extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private AddressEntity address;
-//
-//    @ManyToMany
-//    @JoinTable(
-//            name = "orders_clothes",
-//            joinColumns = {@JoinColumn(name = "order_id", referencedColumnName = "order_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "clothes_id", referencedColumnName = "clothes_id")})
-//    private Set<ClothesEntity> clothes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "orders_clothes",
+            joinColumns = {@JoinColumn(name = "order_id", referencedColumnName = "order_id")},
+            inverseJoinColumns = {@JoinColumn(name = "clothes_id", referencedColumnName = "clothes_id")})
+    private Set<ClothesEntity> clothes;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
