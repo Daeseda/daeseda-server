@@ -1,5 +1,6 @@
 package laundry.daeseda.constant;
 
 public enum OrderStatus {
-    ORDER, CASH, COMPLETE, CANCEL
+    ORDER, CASH, COMPLETE, CANCLE
+
 }
