@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.User;
 import javax.persistence.Column;
 
 @Getter
-
 @Builder
 public class AddressDto {
     private Long addressId;

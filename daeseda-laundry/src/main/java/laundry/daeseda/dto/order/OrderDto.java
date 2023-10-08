@@ -2,6 +2,8 @@ package laundry.daeseda.dto.order;
 
 import laundry.daeseda.constant.OrderStatus;
 import laundry.daeseda.dto.address.AddressDto;
+import laundry.daeseda.dto.address.AddressListDto;
+import laundry.daeseda.dto.clothes.ClothesCountDto;
 import laundry.daeseda.dto.clothes.ClothesDTO;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.clothes.ClothesEntity;
@@ -14,19 +16,18 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class OrderDto {
 
-    private UserDto user;
+//    private UserDto user;
     private AddressDto address;
-    private Set<ClothesDTO> clothes;
+    private List<ClothesCountDto> clothesCount;
 
-    private OrderStatus orderStatus;
+//    private OrderStatus orderStatus;
     private int totalPrice;
     private String washingMethod;
     private LocalDate pickupDate;
