@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -36,24 +36,27 @@ public class OrderEntity extends BaseTimeEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @ManyToMany
-    @JoinTable(
-            name = "orders_clothes",
-            joinColumns = {@JoinColumn(name = "order_id", referencedColumnName = "order_id")},
-            inverseJoinColumns = {@JoinColumn(name = "clothes_id", referencedColumnName = "clothes_id")})
-    private Set<ClothesEntity> clothes;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column
+    private List<ClothesCountEntity> clothesCounts;
 
     @Enumerated(EnumType.STRING)
+    @Column
     private OrderStatus orderStatus;
 
+    @Column
     private int totalPrice;
 
+    @Column
     private String washingMethod;
 
+    @Column
     private LocalDate pickupDate;
 
+    @Column
     private LocalDate deliveryDate;
 
+    @Column
     private String deliveryLocation;
 
 }
