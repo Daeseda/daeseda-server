@@ -1,8 +1,12 @@
 package laundry.daeseda.service.board;
 
 import laundry.daeseda.dto.board.BoardDTO;
+import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.entity.board.BoardEntity;
+import laundry.daeseda.entity.reply.ReplyEntity;
 import laundry.daeseda.repository.board.BoardRepository;
+import laundry.daeseda.repository.reply.ReplyRepository;
+import laundry.daeseda.service.reply.ReplyService;
 import laundry.daeseda.service.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
+    private final ReplyService replyService;
     private final CustomUserDetailsService customUserDetailsService;
     @Override
     public List<BoardDTO> getAllBoardes() {
@@ -108,14 +113,14 @@ public class BoardServiceImpl implements BoardService{
 
 
     @Override
-    public int deleteBoard(Long noticeId) {
+    public int deleteBoard(Long boardId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
             Long userId = customUserDetailsService.loadUserIdByEmail(authentication.getName());
 
             // 게시글 정보 가져오기
-            Optional<BoardEntity> board = boardRepository.findById(noticeId);
+            Optional<BoardEntity> board = boardRepository.findById(boardId);
 
             if (board.isPresent()) {
                 BoardEntity boardEntity = board.get();
@@ -123,7 +128,8 @@ public class BoardServiceImpl implements BoardService{
                 // 권한 확인: 현재 사용자가 게시글 작성자인 경우만 삭제 권한 부여
                 if (userId.equals(boardEntity.getUserId())) {
                     try {
-                        boardRepository.deleteById(noticeId);
+                        replyService.deleteRepliesByBoardId(boardId);
+                        boardRepository.deleteById(boardId);
                         return 1;
                     } catch (Exception e) {
                         return 0;
