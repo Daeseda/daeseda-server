@@ -23,6 +23,7 @@ public class CorsConfig {
         source.registerCorsConfiguration("/category/**", config);
         source.registerCorsConfiguration("/clothes/**", config);
         source.registerCorsConfiguration("/notice/**",config);
+        source.registerCorsConfiguration("/board/**",config);
         return new CorsFilter(source);
     }
 }
