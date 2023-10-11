@@ -26,6 +26,7 @@ public interface ClothesService {
         ClothesEntity clothesEntity = ClothesEntity.builder()
                 .clothesId(clothesDTO.getClothesId())
                 .clothesName(clothesDTO.getClothesName())
+                .clothesPrice(clothesDTO.getClothesPrice())
                 .category(categoryEntity)
                 .build();
         return clothesEntity;
@@ -35,6 +36,7 @@ public interface ClothesService {
         return ClothesDTO.builder()
                 .clothesId(clothesEntity.getClothesId())
                 .clothesName(clothesEntity.getClothesName())
+                .clothesPrice(clothesEntity.getClothesPrice())
                 .categoryId(clothesEntity.getCategory().getCategoryId())
                 .build();
     }

@@ -21,6 +21,9 @@ public class ClothesEntity {
     @Column
     private String clothesName;
 
+    @Column
+    private String clothesPrice;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
