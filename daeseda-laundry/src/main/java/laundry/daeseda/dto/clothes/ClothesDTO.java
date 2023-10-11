@@ -20,6 +20,9 @@ public class ClothesDTO {
     @ApiModelProperty(value = "의류명", example = "검정 셔츠")
     private String clothesName;
 
+    @ApiModelProperty(value = "의류 가격", example = "4000")
+    private String clothesPrice;
+
     @ApiModelProperty(value = "카테고리 ID", example = "1")
     private Long categoryId;
 }
