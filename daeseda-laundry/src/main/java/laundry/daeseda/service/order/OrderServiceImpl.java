@@ -1,17 +1,17 @@
 package laundry.daeseda.service.order;
 
 import laundry.daeseda.constant.OrderStatus;
-import laundry.daeseda.dto.address.AddressListDto;
+import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.clothes.ClothesCountDto;
-import laundry.daeseda.dto.clothes.ClothesDTO;
+import laundry.daeseda.dto.order.OrderAllDto;
 import laundry.daeseda.dto.order.OrderDto;
 import laundry.daeseda.dto.order.OrderFormDto;
+import laundry.daeseda.dto.order.OrderWithdrawDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.clothes.ClothesEntity;
 import laundry.daeseda.entity.order.ClothesCountEntity;
 import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.entity.user.AddressEntity;
-import laundry.daeseda.entity.user.AuthorityEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.repository.clothes.ClothesRepository;
 import laundry.daeseda.repository.order.OrderClothesRepository;
@@ -22,17 +22,12 @@ import laundry.daeseda.service.clothes.ClothesService;
 import laundry.daeseda.service.user.AddressService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDate;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -95,5 +90,42 @@ public class OrderServiceImpl implements OrderService{
                 }
             }
         }
+    }
+
+    @Override
+    public void withdrawOrder(OrderWithdrawDto orderWithdrawDto) {
+        orderRepository.deleteById(orderWithdrawDto.getOrderId());
+    }
+
+    @Override
+    public void getOrderDetail() {
+
+    }
+
+    @Override
+    public List<OrderAllDto> getUserOrderList() {
+        System.out.println("OrderServiceImpl.getUserOrderList");
+        System.out.println(SecurityUtil.getCurrentUsername().get());
+        UserEntity userEntity = userRepository.findOneWithAuthoritiesByUserEmail(SecurityUtil.getCurrentUsername().get()).get();
+        System.out.println(userEntity.getUserId());
+        List<OrderEntity> orderEntityList = orderRepository.getByUser(userEntity);
+
+        List<OrderAllDto> orderAllDtoList = new ArrayList<>();
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            OrderAllDto orderAllDto = OrderAllDto.builder()
+                    .orderId(orderEntity.getOrderId())
+                    .user(UserDto.from(userEntity))
+                    .address(AddressDto.from(orderEntity.getAddress()))
+                    .deliveryLocation(orderEntity.getDeliveryLocation())
+                    .totalPrice(orderEntity.getTotalPrice())
+                    .orderStatus(OrderStatus.ORDER)
+                    .washingMethod(orderEntity.getWashingMethod())
+                    .pickupDate(orderEntity.getPickupDate())
+                    .deliveryDate(orderEntity.getDeliveryDate())
+                    .build();
+            orderAllDtoList.add(orderAllDto);
+        }
+        return orderAllDtoList;
     }
 }

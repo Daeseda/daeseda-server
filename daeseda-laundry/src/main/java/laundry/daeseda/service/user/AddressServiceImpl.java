@@ -1,7 +1,6 @@
 package laundry.daeseda.service.user;
 
 import laundry.daeseda.dto.address.AddressDto;
-import laundry.daeseda.dto.address.AddressListDto;
 import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.repository.user.AddressRepository;
@@ -37,7 +36,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressListDto> getMyAddressList() {
+    public List<AddressDto> getMyAddressList() {
         // 현재 사용자 아이디 가져오기
         String currentUserEmail = SecurityUtil.getCurrentUsername().get();
 
@@ -49,8 +48,6 @@ public class AddressServiceImpl implements AddressService {
         List<AddressEntity> addressEntities = addressRepository.findByUserId(userEntity);
 
         // 주소 목록을 AddressDto로 매핑하고 AddressListDto에 추가
-        List<AddressListDto> addressListDtos = new ArrayList<>();
-        AddressListDto addressListDto = new AddressListDto();
         List<AddressDto> addressDtos = new ArrayList<>();
 
         for (AddressEntity addressEntity : addressEntities) {
@@ -63,10 +60,7 @@ public class AddressServiceImpl implements AddressService {
             addressDtos.add(addressDto);
         }
 
-        addressListDto.setAddressList(addressDtos);
-        addressListDtos.add(addressListDto);
-
-        return addressListDtos;
+        return addressDtos;
     }
 
     @Override
