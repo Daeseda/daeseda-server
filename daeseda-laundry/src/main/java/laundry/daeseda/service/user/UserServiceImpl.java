@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Transactional(readOnly = true)
-    public UserDto getUserWithAuthorities(String userName) {
-        return UserDto.from(userRepository.findOneWithAuthoritiesByUserName(userName).orElse(null));
+    public UserDto getUserWithAuthorities(String userEmail) {
+        return UserDto.from(userRepository.findOneWithAuthoritiesByUserEmail(userEmail).orElse(null));
     }
 
     @Transactional(readOnly = true)

@@ -45,7 +45,7 @@ public class OrderEntity extends BaseTimeEntity {
     private OrderStatus orderStatus;
 
     @Column
-    private int totalPrice;
+    private Long totalPrice;
 
     @Column
     private String washingMethod;
