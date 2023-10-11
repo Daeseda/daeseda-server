@@ -1,7 +1,6 @@
 package laundry.daeseda.controller;
 
 import laundry.daeseda.dto.address.AddressDto;
-import laundry.daeseda.dto.address.AddressListDto;
 import laundry.daeseda.service.user.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,8 +29,8 @@ public class AddressController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public List<AddressListDto> getAddressList() {
-        List<AddressListDto> addressList = addressService.getMyAddressList(); // 주소 목록을 가져오는 비즈니스 로직 호출
+    public List<AddressDto> getAddressList() {
+        List<AddressDto> addressList = addressService.getMyAddressList(); // 주소 목록을 가져오는 비즈니스 로직 호출
         return addressList;
     }
 

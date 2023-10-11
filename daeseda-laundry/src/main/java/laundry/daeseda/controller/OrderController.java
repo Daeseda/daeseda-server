@@ -1,7 +1,9 @@
 package laundry.daeseda.controller;
 
+import laundry.daeseda.dto.order.OrderAllDto;
 import laundry.daeseda.dto.order.OrderDto;
 import laundry.daeseda.dto.order.OrderFormDto;
+import laundry.daeseda.dto.order.OrderWithdrawDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,4 +35,16 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body("r");
     }
 
+    @DeleteMapping("/withdraw")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> orderWithdraw(@RequestBody @Valid OrderWithdrawDto orderWithdrawDto) {
+        orderService.withdrawOrder(orderWithdrawDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("r");
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<List<OrderAllDto>> myOrderList() {
+        return ResponseEntity.ok(orderService.getUserOrderList());
+    }
 }
