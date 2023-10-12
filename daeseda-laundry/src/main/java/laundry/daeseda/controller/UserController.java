@@ -1,11 +1,13 @@
 package laundry.daeseda.controller;
 
+import laundry.daeseda.dto.user.EmailConfirmDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.mail.MailEntity;
 import laundry.daeseda.service.mail.MailService;
 import laundry.daeseda.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +28,8 @@ public class UserController {
 
     private final UserService userService;
     private final MailService mailService;
+    private final RedisTemplate<String, Object> redisTemplate;
+
 
     @GetMapping("/signup")
     public ResponseEntity<List<String>> getSignup() { //register 호출
@@ -64,6 +68,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> updateUser(@RequestBody @Valid UserDto userDto) {
         if (userService.update(userDto) > 0) {
+            userService.signout();
             return ResponseEntity.ok().body("User updated successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
@@ -92,9 +97,27 @@ public class UserController {
             if(userService.checkDuplicateEmail(emailDto)) {
                 String code = mailService.sendMessage(emailDto.getUserEmail());
                 System.out.println("인증코드 : " + code);
+                redisTemplate.opsForValue().set("EMAIL_CODE" + emailDto.getUserEmail(), code);
                 return ResponseEntity.ok(code); // 200 OK with the code
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 이메일입니다."); // 409 Conflict
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("잘못된 형식입니다.");
+    }
+
+    @ResponseBody
+    @PostMapping("/mailConfirm")
+    public ResponseEntity<String> mailConfirm(@RequestBody EmailConfirmDto emailConfirmDto) throws Exception {
+        if(redisTemplate.hasKey("EMAIL_CODE" + emailConfirmDto.getUserEmail())){
+            String redisKey = "EMAIL_CODE" + emailConfirmDto.getUserEmail();
+            String storedCode = (String) redisTemplate.opsForValue().get(redisKey);
+            if(storedCode.equals(emailConfirmDto.getCode())) {
+                redisTemplate.delete(redisKey);
+                System.out.println("인증코드 : " + emailConfirmDto.getCode());
+                return ResponseEntity.ok("ok"); // 200 OK with the code
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("인증번호가 잘못되었습니다");
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("잘못된 형식입니다.");

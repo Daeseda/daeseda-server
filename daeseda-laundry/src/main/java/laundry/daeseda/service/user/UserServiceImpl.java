@@ -68,9 +68,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public int signout() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (redisTemplate.opsForValue().get("JWT_TOKEN:" + userDetails.getUsername()) != null) {
-//            redisTemplate.delete("JWT_TOKEN:" + userDetails.getUsername()); //Token 삭제
-//        }
         try {
             redisTemplate.delete("JWT_TOKEN:" + userDetails.getUsername()); //Token 삭제
             return 1;
