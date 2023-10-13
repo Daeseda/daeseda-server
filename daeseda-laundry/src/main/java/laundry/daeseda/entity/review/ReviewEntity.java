@@ -2,6 +2,7 @@ package laundry.daeseda.entity.review;
 
 
 import laundry.daeseda.entity.order.OrderEntity;
+import laundry.daeseda.entity.user.UserEntity;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,12 +26,16 @@ public class ReviewEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
-    @Column
-    private Long userId;
-
     @OneToOne
-    @JoinColumn(name = "image_id")
-    private ImageEntity image;
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+//    @OneToOne
+//    @JoinColumn(name = "image_id")
+//    private ImageEntity image;
+
+    @Column
+    private String imageUrl;
 
     @OneToOne
     @JoinColumn(name = "order_id")
@@ -38,6 +43,9 @@ public class ReviewEntity {
 
     @Column
     private Float rating;
+
+    @Column
+    private String reviewTitle;
 
     @Column
     private String reviewContent;

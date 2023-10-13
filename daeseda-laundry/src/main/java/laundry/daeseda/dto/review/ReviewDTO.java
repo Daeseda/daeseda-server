@@ -15,9 +15,10 @@ import java.time.LocalDateTime;
 public class ReviewDTO {
     private Long reviewId;
     private Long userId;
-    private ImageEntity image;
+    private String imageUrl;
     private Long orderId;
     private Float rating;
+    private String reviewTitle;
     private String reviewContent;
 
     private LocalDateTime regDate;
