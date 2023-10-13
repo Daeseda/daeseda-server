@@ -20,12 +20,13 @@ import java.time.LocalDateTime;
 public class BoardEntity {
 
     @Id
-    @Column(name = "notice_id")
+    @Column(name = "board_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    @Column
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @Column
     private String boardCategory;

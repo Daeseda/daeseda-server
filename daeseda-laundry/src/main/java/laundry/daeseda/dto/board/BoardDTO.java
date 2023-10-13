@@ -1,5 +1,6 @@
 package laundry.daeseda.dto.board;
 
+import laundry.daeseda.entity.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
