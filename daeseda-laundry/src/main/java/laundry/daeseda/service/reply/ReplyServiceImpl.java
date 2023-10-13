@@ -4,14 +4,18 @@ import laundry.daeseda.dto.board.BoardDTO;
 import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.entity.board.BoardEntity;
 import laundry.daeseda.entity.reply.ReplyEntity;
+import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.repository.board.BoardRepository;
 import laundry.daeseda.repository.reply.ReplyRepository;
+import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.service.user.CustomUserDetailsService;
+import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,6 +30,7 @@ public class ReplyServiceImpl implements ReplyService{
     private final ReplyRepository replyRepository;
     private final CustomUserDetailsService customUserDetailsService;
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<ReplyDTO> getAllReplies() {
@@ -56,95 +61,73 @@ public class ReplyServiceImpl implements ReplyService{
 
     @Override
     public int createReply(ReplyDTO replyDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            Long userId = customUserDetailsService.loadUserIdByEmail(authentication.getName());
+        BoardEntity boardEntity = boardRepository.findById(replyDTO.getBoardId())
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
 
-            Long boardId = replyDTO.getBoardId();
-
-            BoardEntity boardEntity = boardRepository.findById(boardId)
-                    .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
-
-            ReplyEntity replyEntity = ReplyEntity.builder()
-                    .replyId(replyDTO.getReplyId())
-                    .userId(userId)
-                    .board(boardEntity)
-                    .replyContent(replyDTO.getReplyContent())
-                    .regDate(LocalDateTime.now())
-                    .modDate(LocalDateTime.now())
-                    .build();
-            replyRepository.save(replyEntity); // 게시글 저장 및 반환
-            if (replyRepository.save(replyEntity) != null) {
-                return 1;
-            }
-        } else {
-            throw new BadCredentialsException("로그인이 필요합니다.");
-        }
+        ReplyEntity replyEntity = ReplyEntity.builder()
+                .replyId(replyDTO.getReplyId())
+                .user(userEntity)
+                .board(boardEntity)
+                .replyContent(replyDTO.getReplyContent())
+                .regDate(LocalDateTime.now())
+                .modDate(LocalDateTime.now())
+                .build();
+        replyRepository.save(replyEntity); // 게시글 저장 및 반환
         return 1;
     }
 
     @Override
     public int updateReply(ReplyDTO replyDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            Long userId = customUserDetailsService.loadUserIdByEmail(authentication.getName());
+        ReplyEntity reply = replyRepository.findById(replyDTO.getReplyId()).orElseThrow(null);
 
-            Long replyId = replyDTO.getReplyId();
-            ReplyEntity reply = replyRepository.findById(replyId).orElseThrow(null);
+        BoardEntity boardEntity = boardRepository.findById(replyDTO.getBoardId())
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
 
-            Long boardId = replyDTO.getBoardId();
-            BoardEntity boardEntity = boardRepository.findById(boardId)
-                    .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
-
-            if(reply != null && reply.getUserId().equals(userId)) {
-                ReplyEntity replyEntity = ReplyEntity.builder()
-                        .replyId(replyId)
-                        .userId(userId)
-                        .board(boardEntity)
-                        .replyContent(replyDTO.getReplyContent())
-                        .regDate(LocalDateTime.now())
-                        .modDate(LocalDateTime.now())
-                        .build();
-                replyRepository.save(replyEntity);
-                return 1;
-            } else {
-                throw new AccessDeniedException("댓글을 수정 권한이 없습니다.");
-            }
+        if(reply != null && reply.getUser().getUserId().equals(userEntity.getUserId())) {
+            ReplyEntity replyEntity = ReplyEntity.builder()
+                    .replyId(reply.getReplyId())
+                    .user(userEntity)
+                    .board(boardEntity)
+                    .replyContent(replyDTO.getReplyContent())
+                    .regDate(LocalDateTime.now())
+                    .modDate(LocalDateTime.now())
+                    .build();
+            replyRepository.save(replyEntity);
+            return 1;
         } else {
-            throw new BadCredentialsException("로그인이 필요합니다.");
+            throw new AccessDeniedException("댓글 수정 권한이 없습니다.");
         }
     }
 
     @Override
     public int deleteReply(Long replyId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            Long userId = customUserDetailsService.loadUserIdByEmail(authentication.getName());
+        Optional<ReplyEntity> reply = replyRepository.findById(replyId);
 
-            Optional<ReplyEntity> reply = replyRepository.findById(replyId);
+        if (reply.isPresent()) {
+            ReplyEntity replyEntity = reply.get();
 
-            if (reply.isPresent()) {
-                ReplyEntity replyEntity = reply.get();
-
-                // 권한 확인: 현재 사용자가 게시글 작성자인 경우만 삭제 권한 부여
-                if (userId.equals(replyEntity.getUserId())) {
-                    try {
-                        replyRepository.deleteById(replyId);
-                        return 1;
-                    } catch (Exception e) {
-                        return 0;
-                    }
-                } else {
-                    throw new AccessDeniedException("댓글 삭제 권한이 없습니다.");
+            // 권한 확인: 현재 사용자가 게시글 작성자인 경우만 삭제 권한 부여
+            if (userEntity.getUserId().equals(replyEntity.getUser().getUserId())) {
+                try {
+                    replyRepository.deleteById(replyId);
+                    return 1;
+                } catch (Exception e) {
+                    return 0;
                 }
             } else {
-                throw new EntityNotFoundException("댓글을 찾을 수 없습니다.");
+                throw new AccessDeniedException("댓글 삭제 권한이 없습니다.");
             }
         } else {
-            throw new BadCredentialsException("로그인이 필요합니다.");
+            throw new EntityNotFoundException("댓글을 찾을 수 없습니다.");
         }
     }
 

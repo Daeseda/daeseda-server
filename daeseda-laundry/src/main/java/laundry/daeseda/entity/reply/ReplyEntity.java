@@ -1,6 +1,7 @@
 package laundry.daeseda.entity.reply;
 
 import laundry.daeseda.entity.board.BoardEntity;
+import laundry.daeseda.entity.user.UserEntity;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -24,8 +25,9 @@ public class ReplyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyId;
 
-    @Column
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
