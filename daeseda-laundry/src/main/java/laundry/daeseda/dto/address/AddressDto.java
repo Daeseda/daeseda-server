@@ -11,9 +11,11 @@ import org.springframework.security.core.userdetails.User;
 import javax.persistence.Column;
 import java.util.stream.Collectors;
 
+
 @Getter
 @Builder
 public class AddressDto {
+
     private Long addressId;
     private String addressName;
     private String addressDetail;
@@ -30,4 +32,5 @@ public class AddressDto {
                 .addressZipcode(address.getAddressZipcode())
                 .build();
     }
+
 }
