@@ -40,12 +40,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 userEntity.getUserPassword(),
                 grantedAuthorities);
     }
-
-
-    @Transactional
-    public Long loadUserIdByEmail(String userEmail) throws UsernameNotFoundException {
-        return userRepository.findOneWithAuthoritiesByUserEmail(userEmail)
-                .map(UserEntity::getUserId)
-                .orElseThrow(() -> new UsernameNotFoundException(userEmail + " -> 데이터베이스에서 찾을 수 없습니다."));
-    }
 }

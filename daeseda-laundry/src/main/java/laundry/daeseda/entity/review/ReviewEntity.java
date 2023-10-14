@@ -1,6 +1,7 @@
-package laundry.daeseda.entity.reply;
+package laundry.daeseda.entity.review;
 
-import laundry.daeseda.entity.board.BoardEntity;
+
+import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,24 +19,36 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EnableJpaAuditing
-@Table(name = "reply")
-public class ReplyEntity {
-
+@Table(name = "review")
+public class ReviewEntity {
     @Id
-    @Column(name = "reply_id")
+    @Column(name = "review_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long replyId;
+    private Long reviewId;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private BoardEntity board;
+//    @OneToOne
+//    @JoinColumn(name = "image_id")
+//    private ImageEntity image;
 
     @Column
-    private String replyContent;
+    private String imageUrl;
+
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private OrderEntity order;
+
+    @Column
+    private Float rating;
+
+    @Column
+    private String reviewTitle;
+
+    @Column
+    private String reviewContent;
 
     @CreatedDate
     @Column(name = "regDate", updatable = false)
@@ -43,4 +57,5 @@ public class ReplyEntity {
     @LastModifiedDate
     @Column(name = "modDate")
     private LocalDateTime modDate;
+
 }

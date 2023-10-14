@@ -1,6 +1,6 @@
-package laundry.daeseda.dto.board;
+package laundry.daeseda.dto.review;
 
-import laundry.daeseda.entity.user.UserEntity;
+import laundry.daeseda.entity.review.ImageEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +12,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Data
-public class BoardDTO {
-    private Long boardId;
+public class ReviewDTO {
+    private Long reviewId;
     private Long userId;
-    private String boardCategory;
-    private String boardTitle;
-    private String boardContent;
+    private String imageUrl;
+    private Long orderId;
+    private Float rating;
+    private String reviewTitle;
+    private String reviewContent;
 
     private LocalDateTime regDate;
     private LocalDateTime modDate;

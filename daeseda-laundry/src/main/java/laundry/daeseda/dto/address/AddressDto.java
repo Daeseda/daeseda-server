@@ -1,8 +1,16 @@
 package laundry.daeseda.dto.address;
 
+import laundry.daeseda.dto.user.AuthorityDto;
+import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.user.AddressEntity;
+import laundry.daeseda.entity.user.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.userdetails.User;
+
+import javax.persistence.Column;
+import java.util.stream.Collectors;
+
 
 @Getter
 @Builder

@@ -21,7 +21,7 @@ public interface ReplyService {
     default ReplyDTO convertToDTO(ReplyEntity replyEntity) {
         ReplyDTO replyDTO = ReplyDTO.builder()
                 .replyId(replyEntity.getReplyId())
-                .userId(replyEntity.getUserId())
+                .userId(replyEntity.getUser().getUserId())
                 .boardId(replyEntity.getBoard().getBoardId())
                 .replyContent(replyEntity.getReplyContent())
                 .regDate(LocalDateTime.now())

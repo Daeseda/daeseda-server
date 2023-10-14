@@ -104,7 +104,9 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderAllDto> getUserOrderList() {
+      
         UserEntity userEntity = userRepository.findOneWithAuthoritiesByUserEmail(SecurityUtil.getCurrentUsername().get()).get();
+      
         List<OrderEntity> orderEntityList = orderRepository.getByUser(userEntity);
 
         List<OrderAllDto> orderAllDtoList = new ArrayList<>();
