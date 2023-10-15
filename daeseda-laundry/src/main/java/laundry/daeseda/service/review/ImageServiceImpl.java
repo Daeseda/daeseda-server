@@ -36,7 +36,11 @@ public class ImageServiceImpl implements ImageService{
             String originalFilename = image.getOriginalFilename();
 
             // 파일 확장자 추출
-            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String fileExtension = "";
+            int lastIndex = originalFilename.lastIndexOf(".");
+            if (lastIndex >= 0) {
+                fileExtension = originalFilename.substring(lastIndex);
+            }
 
             // 이미지 파일에 고유한 이름 부여
             String uniqueFileName = UUID.randomUUID() + fileExtension;
