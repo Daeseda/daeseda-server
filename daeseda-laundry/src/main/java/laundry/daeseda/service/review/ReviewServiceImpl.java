@@ -91,6 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
                     .user(userEntity)
                     .imageUrl(imageUrl)
                     .order(matchOrder)
+                    .rating(reviewDTO.getRating())
                     .reviewTitle(reviewDTO.getReviewTitle())
                     .reviewContent(reviewDTO.getReviewContent())
                     .regDate(LocalDateTime.now())
