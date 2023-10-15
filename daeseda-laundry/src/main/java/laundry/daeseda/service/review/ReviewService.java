@@ -13,7 +13,7 @@ public interface ReviewService {
     List<ReviewDTO> getAllReviews();
     Optional<ReviewDTO> getReviewById(Long reviewId);
     int createReview(ReviewDTO reviewDTO, MultipartFile image, Long orderId);
-    int updateReview(ReviewDTO reviewDTO);
+    int updateReview(ReviewDTO reviewDTO, MultipartFile image);
     int deleteReview(Long reviewId);
 
     default ReviewDTO convertToDTO(ReviewEntity reviewEntity) {
