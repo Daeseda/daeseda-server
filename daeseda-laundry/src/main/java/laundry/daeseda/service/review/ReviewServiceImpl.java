@@ -83,21 +83,23 @@ public class ReviewServiceImpl implements ReviewService {
                 break;
             }
         }
+        if(matchOrder != null) {
+            String imageUrl = imageService.saveImage(image);
 
-        String imageUrl = imageService.saveImage(image);
-
-        ReviewEntity reviewEntity = ReviewEntity.builder()
-                .reviewId(reviewDTO.getReviewId())
-                .user(userEntity)
-                .imageUrl(imageUrl)
-                .order(matchOrder)
-                .reviewTitle(reviewDTO.getReviewTitle())
-                .reviewContent(reviewDTO.getReviewContent())
-                .regDate(LocalDateTime.now())
-                .modDate(LocalDateTime.now())
-                .build();
-        reviewRepository.save(reviewEntity); // 게시글 저장 및 반환
-        return 1;
+            ReviewEntity reviewEntity = ReviewEntity.builder()
+                    .reviewId(reviewDTO.getReviewId())
+                    .user(userEntity)
+                    .imageUrl(imageUrl)
+                    .order(matchOrder)
+                    .reviewTitle(reviewDTO.getReviewTitle())
+                    .reviewContent(reviewDTO.getReviewContent())
+                    .regDate(LocalDateTime.now())
+                    .modDate(LocalDateTime.now())
+                    .build();
+            reviewRepository.save(reviewEntity); // 게시글 저장 및 반환
+            return 1;
+        }
+        return 0;
     }
 
     @Override
