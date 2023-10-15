@@ -1,5 +1,6 @@
 package laundry.daeseda.controller;
 
+import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.dto.review.ImageDTO;
 import laundry.daeseda.dto.review.ReviewDTO;
 import laundry.daeseda.service.review.ReviewService;
@@ -38,5 +39,25 @@ public class ReviewController {
     public ResponseEntity<Void> registerReview(@RequestParam("image") MultipartFile image, ReviewDTO reviewDTO, Long orderId) {
         reviewService.createReview(reviewDTO, image, orderId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<String> updateReview(@RequestParam("image") MultipartFile image, ReviewDTO reviewDTO) {
+        if(reviewService.updateReview(reviewDTO, image) > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("업데이트가 완료되었습니다.");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("업데이트에 실패하였습니다.");
+        }
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId) {
+        if(reviewService.deleteReview(reviewId) > 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("삭제가 성공적으로 실행되었습니다.");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제에 실패했습니다.");
+        }
     }
 }

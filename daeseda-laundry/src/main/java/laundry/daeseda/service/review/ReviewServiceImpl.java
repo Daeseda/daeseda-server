@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -104,13 +105,45 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public int updateReview(ReviewDTO reviewDTO) {
+    public int updateReview(ReviewDTO reviewDTO, MultipartFile image) {
+        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        ReviewEntity review = reviewRepository.findById(reviewDTO.getReviewId()).orElseThrow(null);
+
+        if(review != null && review.getUser().getUserId().equals(userEntity.getUserId())) {
+            String imageUrl = review.getImageUrl();
+
+            if (image != null && !image.isEmpty()) {
+                imageUrl = imageService.saveImage(image);
+            }
+
+            OrderEntity orderEntity = review.getOrder();
+
+            ReviewEntity reviewEntity = ReviewEntity.builder()
+                    .reviewId(reviewDTO.getReviewId())
+                    .user(userEntity)
+                    .imageUrl(imageUrl)
+                    .order(orderEntity)
+                    .rating(reviewDTO.getRating())
+                    .reviewTitle(reviewDTO.getReviewTitle())
+                    .reviewContent(reviewDTO.getReviewContent())
+                    .regDate(LocalDateTime.now())
+                    .modDate(LocalDateTime.now())
+                    .build();
+            reviewRepository.save(reviewEntity); // 게시글 저장 및 반환
+            return 1;
+        }
         return 0;
     }
 
     @Override
     public int deleteReview(Long reviewId) {
-        return 0;
+        try {
+            reviewRepository.deleteById(reviewId);
+            return 1; // 삭제 성공 시 1 반환
+        } catch (Exception e) {
+            return 0; // 삭제 실패 시 0 반환
+        }
     }
-
 }
