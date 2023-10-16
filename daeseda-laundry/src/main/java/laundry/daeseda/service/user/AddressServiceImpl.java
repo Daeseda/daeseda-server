@@ -27,6 +27,7 @@ public class AddressServiceImpl implements AddressService {
 
         AddressEntity addressEntity = AddressEntity.builder()
                 .addressName(addressDto.getAddressName())
+                .addressRoad(addressDto.getAddressRoad())
                 .addressZipcode(addressDto.getAddressZipcode())
                 .addressDetail(addressDto.getAddressDetail())
                 .userId(userEntity)
@@ -54,6 +55,7 @@ public class AddressServiceImpl implements AddressService {
             AddressDto addressDto = AddressDto.builder()
                     .addressId(addressEntity.getAddressId())
                     .addressName(addressEntity.getAddressName())
+                    .addressRoad(addressEntity.getAddressRoad())
                     .addressZipcode(addressEntity.getAddressZipcode())
                     .addressDetail(addressEntity.getAddressDetail())
                     .build();

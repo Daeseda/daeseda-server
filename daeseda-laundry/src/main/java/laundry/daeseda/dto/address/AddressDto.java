@@ -18,6 +18,7 @@ public class AddressDto {
 
     private Long addressId;
     private String addressName;
+    private String addressRoad;
     private String addressDetail;
     private String addressZipcode;
 
@@ -28,6 +29,7 @@ public class AddressDto {
         return AddressDto.builder()
                 .addressId(address.getAddressId())
                 .addressName(address.getAddressName())
+                .addressRoad(address.getAddressRoad())
                 .addressDetail(address.getAddressDetail())
                 .addressZipcode(address.getAddressZipcode())
                 .build();
