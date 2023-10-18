@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class OrderEntity extends BaseTimeEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column
     private List<ClothesCountEntity> clothesCounts;
 
