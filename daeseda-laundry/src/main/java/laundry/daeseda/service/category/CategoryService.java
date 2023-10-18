@@ -2,7 +2,9 @@ package laundry.daeseda.service.category;
 
 
 import laundry.daeseda.dto.category.CategoryDTO;
+import laundry.daeseda.dto.category.ReviewCategoryDTO;
 import laundry.daeseda.entity.category.CategoryEntity;
+import laundry.daeseda.entity.order.OrderEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,7 @@ public interface CategoryService {
     int createCategory(CategoryDTO categoryDTO);
     int updateCategory(CategoryDTO categoryDTO);
     int deleteCategory(Long categoryId);
+    List<ReviewCategoryDTO> getCategoriesByOrderId(OrderEntity order);
 
 
     default CategoryEntity convertToEntity(CategoryDTO categoryDTO) {

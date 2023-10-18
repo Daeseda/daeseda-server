@@ -1,8 +1,10 @@
 package laundry.daeseda.controller;
 
+import laundry.daeseda.dto.category.ReviewCategoryDTO;
 import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.dto.review.ImageDTO;
 import laundry.daeseda.dto.review.ReviewDTO;
+import laundry.daeseda.service.review.ReviewCategoryService;
 import laundry.daeseda.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,15 +43,15 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{reviewId}")
-    public ResponseEntity<String> updateReview(@RequestParam("image") MultipartFile image, ReviewDTO reviewDTO) {
-        if(reviewService.updateReview(reviewDTO, image) > 0) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("업데이트가 완료되었습니다.");
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("업데이트에 실패하였습니다.");
-        }
-    }
+//    @PutMapping("/{reviewId}")
+//    public ResponseEntity<String> updateReview(@RequestParam("image") MultipartFile image, ReviewDTO reviewDTO) {
+//        if(reviewService.updateReview(reviewDTO, image) > 0) {
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("업데이트가 완료되었습니다.");
+//        }
+//        else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("업데이트에 실패하였습니다.");
+//        }
+//    }
 
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<String> deleteReview(@PathVariable Long reviewId) {

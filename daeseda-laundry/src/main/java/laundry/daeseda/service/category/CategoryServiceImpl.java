@@ -2,20 +2,26 @@ package laundry.daeseda.service.category;
 
 
 import laundry.daeseda.dto.category.CategoryDTO;
+import laundry.daeseda.dto.category.ReviewCategoryDTO;
 import laundry.daeseda.entity.category.CategoryEntity;
+import laundry.daeseda.entity.clothes.ClothesEntity;
+import laundry.daeseda.entity.order.ClothesCountEntity;
+import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.repository.category.CategoryRepository;
+import laundry.daeseda.repository.order.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public List<CategoryDTO> getAllCategories() {
@@ -80,4 +86,31 @@ public class CategoryServiceImpl implements CategoryService {
             return 0; // 삭제 실패 시 0 반환
         }
     }
+
+    @Override
+    public List<ReviewCategoryDTO> getCategoriesByOrderId(OrderEntity orderEntity) {
+        List<ReviewCategoryDTO> reviewCategoryDTOList = new ArrayList<>();
+
+        List<ClothesCountEntity> clothesCounts = orderEntity.getClothesCounts();
+
+        for (ClothesCountEntity clothesCount : clothesCounts) {
+            ClothesEntity clothes = clothesCount.getClothes();
+
+            if (clothes != null) {
+                CategoryEntity category = clothes.getCategory();
+
+                if (category != null) {
+                    ReviewCategoryDTO reviewCategoryDTO = ReviewCategoryDTO.builder()
+                            .categories(convertToDTO(category))
+                            .build();
+
+                    if (!reviewCategoryDTOList.contains(reviewCategoryDTO)) {
+                        reviewCategoryDTOList.add(reviewCategoryDTO);
+                    }
+                }
+            }
+        }
+        return reviewCategoryDTOList;
+    }
+
 }

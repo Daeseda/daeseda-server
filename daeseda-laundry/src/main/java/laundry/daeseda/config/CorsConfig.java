@@ -27,6 +27,7 @@ public class CorsConfig {
         source.registerCorsConfiguration("/reply/**",config);
         source.registerCorsConfiguration("/image/**",config);
         source.registerCorsConfiguration("/review/**",config);
+        source.registerCorsConfiguration("/review-category/**",config);
         return new CorsFilter(source);
     }
 }
