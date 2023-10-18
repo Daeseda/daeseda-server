@@ -30,4 +30,8 @@ public class ClothesCountEntity {
     private ClothesEntity clothes;
 
     private int count;
+
+    public ClothesEntity getClothes() {
+        return clothes;
+    }
 }

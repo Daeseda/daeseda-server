@@ -1,49 +1,48 @@
 package laundry.daeseda.service.review;
 
-import laundry.daeseda.dto.reply.ReplyDTO;
-import laundry.daeseda.dto.review.ImageDTO;
+import laundry.daeseda.dto.category.CategoryDTO;
+import laundry.daeseda.dto.category.ReviewCategoryDTO;
+import laundry.daeseda.dto.clothes.ClothesCountDto;
 import laundry.daeseda.dto.review.ReviewDTO;
-import laundry.daeseda.dto.user.UserDto;
-import laundry.daeseda.entity.board.BoardEntity;
+import laundry.daeseda.entity.category.CategoryEntity;
+import laundry.daeseda.entity.clothes.ClothesEntity;
+import laundry.daeseda.entity.order.ClothesCountEntity;
 import laundry.daeseda.entity.order.OrderEntity;
-import laundry.daeseda.entity.reply.ReplyEntity;
-import laundry.daeseda.entity.review.ImageEntity;
+import laundry.daeseda.entity.review.ReviewCategoryEntity;
 import laundry.daeseda.entity.review.ReviewEntity;
 import laundry.daeseda.entity.user.UserEntity;
+import laundry.daeseda.repository.category.CategoryRepository;
 import laundry.daeseda.repository.order.OrderRepository;
+import laundry.daeseda.repository.review.ReviewCategoryRepository;
 import laundry.daeseda.repository.review.ReviewRepository;
 import laundry.daeseda.repository.user.UserRepository;
-import laundry.daeseda.service.order.OrderService;
-import laundry.daeseda.service.user.CustomUserDetailsService;
+import laundry.daeseda.service.category.CategoryService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import javax.persistence.EntityNotFoundException;
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
-    @Value("${custom.image-directory}")
-    private String imageDir;
 
     private final ReviewRepository reviewRepository;
+    private final ReviewCategoryRepository reviewCategoryRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
     private final OrderRepository orderRepository;
+    private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
     @Override
     public List<ReviewDTO> getAllReviews() {
         List<ReviewEntity> reviewList = reviewRepository.findAll();
@@ -79,63 +78,78 @@ public class ReviewServiceImpl implements ReviewService {
         List<OrderEntity> userOrders = orderRepository.getByUser(userEntity);
         OrderEntity matchOrder = null;
         for(OrderEntity order : userOrders) {
-            if(order.getOrderId().equals(orderId)) {
+            if (order.getOrderId().equals(orderId)) {
                 matchOrder = order;
                 break;
             }
         }
+
         if(matchOrder != null) {
             String imageUrl = imageService.saveImage(image);
 
             ReviewEntity reviewEntity = ReviewEntity.builder()
                     .reviewId(reviewDTO.getReviewId())
                     .user(userEntity)
+                    .userNickname(userEntity.getUserNickname())
                     .imageUrl(imageUrl)
                     .order(matchOrder)
                     .rating(reviewDTO.getRating())
-                    .reviewTitle(reviewDTO.getReviewTitle())
                     .reviewContent(reviewDTO.getReviewContent())
                     .regDate(LocalDateTime.now())
                     .modDate(LocalDateTime.now())
                     .build();
-            reviewRepository.save(reviewEntity); // 게시글 저장 및 반환
-            return 1;
-        }
-        return 0;
-    }
+            reviewEntity = reviewRepository.save(reviewEntity);
 
-    @Override
-    public int updateReview(ReviewDTO reviewDTO, MultipartFile image) {
-        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        ReviewEntity review = reviewRepository.findById(reviewDTO.getReviewId()).orElseThrow(null);
+            List<ReviewCategoryDTO> reviewCategoryDTOList = categoryService.getCategoriesByOrderId(matchOrder);
+            if(reviewCategoryDTOList != null) {
+                for(ReviewCategoryDTO reviewCategoryDTO : reviewCategoryDTOList) {
+                    CategoryEntity categoryEntity = categoryRepository.findById(reviewCategoryDTO.getCategories().getCategoryId()).orElse(null);
 
-        if(review != null && review.getUser().getUserId().equals(userEntity.getUserId())) {
-            String imageUrl = review.getImageUrl();
-
-            if (image != null && !image.isEmpty()) {
-                imageUrl = imageService.saveImage(image);
+                    ReviewCategoryEntity reviewCategory = ReviewCategoryEntity.builder()
+                            .category(categoryEntity)
+                            .review(reviewEntity)
+                            .build();
+                    reviewCategoryRepository.save(reviewCategory);
+                }
             }
-
-            OrderEntity orderEntity = review.getOrder();
-
-            ReviewEntity reviewEntity = ReviewEntity.builder()
-                    .reviewId(reviewDTO.getReviewId())
-                    .user(userEntity)
-                    .imageUrl(imageUrl)
-                    .order(orderEntity)
-                    .rating(reviewDTO.getRating())
-                    .reviewTitle(reviewDTO.getReviewTitle())
-                    .reviewContent(reviewDTO.getReviewContent())
-                    .regDate(LocalDateTime.now())
-                    .modDate(LocalDateTime.now())
-                    .build();
-            reviewRepository.save(reviewEntity); // 게시글 저장 및 반환
             return 1;
         }
         return 0;
     }
+
+//    @Override
+//    public int updateReview(ReviewDTO reviewDTO, MultipartFile image) {
+//        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
+//                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+//
+//        ReviewEntity review = reviewRepository.findById(reviewDTO.getReviewId()).orElseThrow(null);
+//
+//        if(review != null && review.getUser().getUserId().equals(userEntity.getUserId())) {
+//            String imageUrl = review.getImageUrl();
+//
+//            if (image != null && !image.isEmpty()) {
+//                imageUrl = imageService.saveImage(image);
+//            }
+//
+//            OrderEntity orderEntity = review.getOrder();
+//
+//            ReviewEntity reviewEntity = ReviewEntity.builder()
+//                    .reviewId(reviewDTO.getReviewId())
+//                    .user(userEntity)
+//                    .imageUrl(imageUrl)
+//                    .order(orderEntity)
+//                    .rating(reviewDTO.getRating())
+//                    .reviewTitle(reviewDTO.getReviewTitle())
+//                    .reviewContent(reviewDTO.getReviewContent())
+//                    .regDate(LocalDateTime.now())
+//                    .modDate(LocalDateTime.now())
+//                    .build();
+//            reviewRepository.save(reviewEntity); // 게시글 저장 및 반환
+//            return 1;
+//        }
+//        return 0;
+//    }
 
     @Override
     public int deleteReview(Long reviewId) {
@@ -146,4 +160,31 @@ public class ReviewServiceImpl implements ReviewService {
             return 0; // 삭제 실패 시 0 반환
         }
     }
+
+    @Override
+    public ReviewDTO convertToDTO(ReviewEntity reviewEntity) {
+        ReviewDTO reviewDTO = ReviewDTO.builder()
+                .reviewId(reviewEntity.getReviewId())
+                .userId(reviewEntity.getUser().getUserId())
+                .userNickname(reviewEntity.getUser().getUserNickname())
+                .imageUrl(reviewEntity.getImageUrl())
+                .orderId(reviewEntity.getOrder().getOrderId())
+                .rating(reviewEntity.getRating())
+                .reviewContent(reviewEntity.getReviewContent())
+                .regDate(LocalDateTime.now())
+                .modDate(LocalDateTime.now())
+                .build();
+        return reviewDTO;
+    }
+
+
+    public List<CategoryEntity> convertToEntities(List<CategoryDTO> categoryDTOS) {
+        List<CategoryEntity> categoryEntities = new ArrayList<>();
+        for (CategoryDTO categoryDTO : categoryDTOS) {
+            CategoryEntity categoryEntity = categoryService.convertToEntity(categoryDTO);
+            categoryEntities.add(categoryEntity);
+        }
+        return categoryEntities;
+    }
+
 }

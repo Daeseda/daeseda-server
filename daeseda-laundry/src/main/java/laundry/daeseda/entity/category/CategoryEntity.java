@@ -1,8 +1,10 @@
 package laundry.daeseda.entity.category;
 
+import laundry.daeseda.entity.review.ReviewCategoryEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,4 +21,8 @@ public class CategoryEntity {
 
     @Column
     private String categoryName;
+
+    @OneToMany(mappedBy = "category")
+    private List<ReviewCategoryEntity> reviewCategories;
+
 }

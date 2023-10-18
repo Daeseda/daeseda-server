@@ -25,6 +25,7 @@ public interface BoardService {
         BoardDTO boardDTO = BoardDTO.builder()
                 .boardId(boardEntity.getBoardId())
                 .userId(boardEntity.getUser().getUserId())
+                .userNickname(boardEntity.getUser().getUserNickname())
                 .boardCategory(boardEntity.getBoardCategory())
                 .boardTitle(boardEntity.getBoardTitle())
                 .boardContent(boardEntity.getBoardContent())

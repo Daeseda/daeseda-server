@@ -51,7 +51,8 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .antMatchers("/users/**", "/category/**", "/clothes/**", "/notice/**", "/board/**", "/reply/**", "/image/**", "/review/**", "/orders/**").permitAll()
+
+                        .antMatchers("/users/**", "/category/**", "/clothes/**", "/notice/**", "/board/**", "/reply/**", "/image/**", "/review/**", "/review-category/**", "/orders/**").permitAll()
                         .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 ) // .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
