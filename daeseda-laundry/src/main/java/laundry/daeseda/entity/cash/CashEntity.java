@@ -1,6 +1,7 @@
-package laundry.daeseda.entity.order;
+package laundry.daeseda.entity.cash;
 
 import laundry.daeseda.entity.clothes.ClothesEntity;
+import laundry.daeseda.entity.order.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,29 +10,33 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "clothes_count")
+@Table(name = "cash")
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClothesCountEntity {
+public class CashEntity {
 
     @Id
+    @Column(name = "cash_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long countId;
+    private Long cashId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;
 
-    @ManyToOne
-    @JoinColumn(name = "clothes_id")
-    private ClothesEntity clothes;
+    @Column
+    private String cardName;
 
-    private int count;
+    @Column
+    private String cardNumber;
 
-    public ClothesEntity getClothes() {
-        return clothes;
-    }
+    @Column
+    private Long paidAmount;
+
+    @Column
+    private String payMethod;
+
 }

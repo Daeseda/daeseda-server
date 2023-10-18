@@ -47,4 +47,12 @@ public class OrderController {
     public ResponseEntity<List<OrderAllDto>> myOrderList() {
         return ResponseEntity.ok(orderService.getUserOrderList());
     }
+
+    @PutMapping("/cash")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> changeStatus(@RequestBody @Valid OrderWithdrawDto order){
+        System.out.println("OrderController.changeStatus");
+        orderService.patchStatus(order);
+        return ResponseEntity.status(HttpStatus.OK).body("해줬음");
+    }
 }

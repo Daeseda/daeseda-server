@@ -19,4 +19,6 @@ public interface OrderService {
     void getOrderDetail();
 
     List<OrderAllDto> getUserOrderList();
+
+    void patchStatus(OrderWithdrawDto order);
 }

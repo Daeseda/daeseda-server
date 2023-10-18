@@ -25,6 +25,9 @@ public class AddressEntity {
     private String addressName;
 
     @Column
+    private String addressRoad;
+
+    @Column
     private String addressDetail;
 
     @Column

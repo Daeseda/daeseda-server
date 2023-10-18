@@ -3,6 +3,7 @@ package laundry.daeseda.service.order;
 import laundry.daeseda.constant.OrderStatus;
 import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.clothes.ClothesCountDto;
+import laundry.daeseda.dto.clothes.ClothesDTO;
 import laundry.daeseda.dto.order.OrderAllDto;
 import laundry.daeseda.dto.order.OrderDto;
 import laundry.daeseda.dto.order.OrderFormDto;
@@ -108,10 +109,24 @@ public class OrderServiceImpl implements OrderService{
         UserEntity userEntity = userRepository.findOneWithAuthoritiesByUserEmail(SecurityUtil.getCurrentUsername().get()).get();
       
         List<OrderEntity> orderEntityList = orderRepository.getByUser(userEntity);
-
         List<OrderAllDto> orderAllDtoList = new ArrayList<>();
 
         for (OrderEntity orderEntity : orderEntityList) {
+            List<ClothesCountEntity> clothesCountEntities = orderClothesRepository.getByOrder(orderEntity);
+            List<ClothesCountDto> clothesCountDtoList = new ArrayList<>();
+            for(ClothesCountEntity clothesCountEntity : clothesCountEntities) {
+                ClothesDTO clothesDTO = ClothesDTO.builder()
+                        .clothesId(clothesCountEntity.getClothes().getClothesId())
+                        .build();
+                
+                ClothesCountDto clothesCountDto = ClothesCountDto.builder()
+                        .clothes(clothesDTO)
+                        .count(clothesCountEntity.getCount())
+                        .build();
+                
+                clothesCountDtoList.add(clothesCountDto);
+            }
+
             OrderAllDto orderAllDto = OrderAllDto.builder()
                     .orderId(orderEntity.getOrderId())
                     .user(UserDto.from(userEntity))
@@ -126,5 +141,11 @@ public class OrderServiceImpl implements OrderService{
             orderAllDtoList.add(orderAllDto);
         }
         return orderAllDtoList;
+    }
+
+    @Transactional
+    public void patchStatus(OrderWithdrawDto orderAllDto) {
+        OrderStatus orderStatus = OrderStatus.CASH;
+        orderRepository.updateStatus(orderStatus, orderAllDto.getOrderId());
     }
 }
