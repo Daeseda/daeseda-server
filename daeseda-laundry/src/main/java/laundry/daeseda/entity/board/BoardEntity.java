@@ -29,6 +29,9 @@ public class BoardEntity {
     private UserEntity user;
 
     @Column
+    private String userNickname;
+
+    @Column
     private String boardCategory;
 
     @Column

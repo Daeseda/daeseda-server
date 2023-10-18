@@ -29,6 +29,9 @@ public class ReplyEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @Column
+    private String userNickname;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private BoardEntity board;
