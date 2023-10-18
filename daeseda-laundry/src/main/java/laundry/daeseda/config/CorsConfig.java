@@ -15,18 +15,13 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
+        config.addAllowedOriginPattern("http://localhost:3003");
+        config.addAllowedOriginPattern("https://localhost:3003");
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
-        source.registerCorsConfiguration("/users/**", config);
-        source.registerCorsConfiguration("/category/**", config);
-        source.registerCorsConfiguration("/clothes/**", config);
-        source.registerCorsConfiguration("/notice/**",config);
-        source.registerCorsConfiguration("/board/**",config);
-        source.registerCorsConfiguration("/reply/**",config);
-        source.registerCorsConfiguration("/image/**",config);
-        source.registerCorsConfiguration("/review/**",config);
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 }
