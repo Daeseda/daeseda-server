@@ -52,7 +52,7 @@ public class ReviewEntity {
     private Float rating;
 
     @Column
-    private String reviewTitle;
+    private String userNickname;
 
     @Column
     private String reviewContent;

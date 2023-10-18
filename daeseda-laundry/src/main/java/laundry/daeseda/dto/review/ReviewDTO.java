@@ -25,7 +25,7 @@ public class ReviewDTO {
     private List<ReviewCategoryDTO> categories;
     private Long orderId;
     private Float rating;
-    private String reviewTitle;
+    private String userNickname;
     private String reviewContent;
 
     private LocalDateTime regDate;
