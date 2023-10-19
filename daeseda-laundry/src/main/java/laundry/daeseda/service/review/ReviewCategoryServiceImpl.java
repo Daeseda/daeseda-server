@@ -27,12 +27,21 @@ public class ReviewCategoryServiceImpl implements ReviewCategoryService{
             if (reviewCategory.getReview().getReviewId().equals(reviewDTO.getReviewId())) {
                 CategoryDTO categoryDTO = categoryService.convertToDTO(reviewCategory.getCategory());
                 ReviewCategoryDTO reviewCategoryDTO = ReviewCategoryDTO.builder()
+                        .reviewCategoryId(reviewCategory.getId())
+                        .reviewId(reviewCategory.getReview().getReviewId())
                         .categories(categoryDTO)
                         .build();
                 reviewCategoryDTOList.add(reviewCategoryDTO);
             }
         }
         return reviewCategoryDTOList;
+    }
+
+    @Override
+    public int deleteReviewCategoriesByReviewId(Long reviewId) {
+       List<ReviewCategoryEntity> reviewCategories = reviewCategoryRepository.findByReviewReviewId(reviewId);
+       reviewCategoryRepository.deleteAll(reviewCategories);
+       return 1;
     }
 
     @Override

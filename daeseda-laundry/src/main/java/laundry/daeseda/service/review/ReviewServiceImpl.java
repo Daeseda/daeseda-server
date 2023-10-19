@@ -21,6 +21,7 @@ import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final OrderRepository orderRepository;
     private final CategoryService categoryService;
     private final CategoryRepository categoryRepository;
+    private final ReviewCategoryService reviewCategoryService;
     @Override
     public List<ReviewDTO> getAllReviews() {
         List<ReviewEntity> reviewList = reviewRepository.findAll();
@@ -153,11 +155,27 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public int deleteReview(Long reviewId) {
-        try {
-            reviewRepository.deleteById(reviewId);
-            return 1; // 삭제 성공 시 1 반환
-        } catch (Exception e) {
-            return 0; // 삭제 실패 시 0 반환
+        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        Optional<ReviewEntity> review = reviewRepository.findById(reviewId);
+
+        if(review.isPresent()) {
+            ReviewEntity reviewEntity = review.get();
+
+            if(userEntity.getUserId().equals(reviewEntity.getUser().getUserId())) {
+                try {
+                    reviewRepository.deleteById(reviewId);
+                    reviewCategoryService.deleteReviewCategoriesByReviewId(reviewId);
+                    return 1;
+                } catch (Exception e) {
+                    return 0;
+                }
+            } else {
+                throw new AccessDeniedException("리뷰 삭제 권한이 없습니다.");
+            }
+        } else {
+            throw new EntityNotFoundException("리뷰를 찾을 수 없습니다.");
         }
     }
 
