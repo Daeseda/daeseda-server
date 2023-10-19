@@ -48,4 +48,9 @@ public class UserEntity {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<AuthorityEntity> authorities;
+
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private AddressEntity defaultAddress;
+
 }

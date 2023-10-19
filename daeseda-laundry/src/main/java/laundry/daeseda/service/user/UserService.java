@@ -1,5 +1,6 @@
 package laundry.daeseda.service.user;
 
+import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.dto.user.UserDto;
@@ -37,4 +38,6 @@ public interface UserService {
     }
 
     boolean checkDuplicateEmail(EmailDto emailDto);
+
+    boolean settingDefaultAddress(AddressDto addressDto);
 }

@@ -30,7 +30,7 @@ public class AddressServiceImpl implements AddressService {
                 .addressRoad(addressDto.getAddressRoad())
                 .addressZipcode(addressDto.getAddressZipcode())
                 .addressDetail(addressDto.getAddressDetail())
-                .userId(userEntity)
+                .user(userEntity)
                 .build();
         addressRepository.save(addressEntity);
         return 1;
@@ -46,7 +46,7 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 사용자 엔티티를 기반으로 해당 사용자의 주소 목록 조회
-        List<AddressEntity> addressEntities = addressRepository.findByUserId(userEntity);
+        List<AddressEntity> addressEntities = addressRepository.findByUser(userEntity);
 
         // 주소 목록을 AddressDto로 매핑하고 AddressListDto에 추가
         List<AddressDto> addressDtos = new ArrayList<>();
