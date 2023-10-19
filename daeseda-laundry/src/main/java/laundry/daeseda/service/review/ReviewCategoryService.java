@@ -11,5 +11,6 @@ import java.util.List;
 public interface ReviewCategoryService {
     List<ReviewCategoryDTO> getAllCategoriesByReview(ReviewDTO reviewDTO);
 
+    int deleteReviewCategoriesByReviewId(Long reviewId);
     ReviewCategoryDTO convertToDTO(ReviewCategoryEntity reviewCategory);
 }

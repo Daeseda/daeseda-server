@@ -134,24 +134,13 @@ public class ReplyServiceImpl implements ReplyService{
     }
 
     @Override
-    public List<ReplyDTO> deleteRepliesByBoardId(Long boardId) {
+    public int deleteRepliesByBoardId(Long boardId) {
         // 특정 게시글의 댓글을 조회합니다.
         List<ReplyEntity> replyList = replyRepository.findByBoardBoardId(boardId);
 
-        List<ReplyDTO> replyDTOList = new ArrayList<>();
-
-        // 조회된 댓글을 삭제하고 DTO로 변환합니다.
-        for (ReplyEntity replyEntity : replyList) {
-            ReplyDTO replyDTO = convertToDTO(replyEntity);
-            replyDTOList.add(replyDTO);
-
-            // 댓글을 삭제합니다.
-            replyRepository.delete(replyEntity);
-        }
-
-        return replyDTOList;
+        // 댓글을 삭제합니다.
+        replyRepository.deleteAll(replyList);
+        return 1;
     }
-
-
 
 }

@@ -15,7 +15,7 @@ public interface ReplyService {
     int createReply(ReplyDTO replyDTO);
     int updateReply(ReplyDTO replyDTO);
     int deleteReply(Long replyId);
-    List<ReplyDTO> deleteRepliesByBoardId(Long boardId);
+    int deleteRepliesByBoardId(Long boardId);
 
 
     default ReplyDTO convertToDTO(ReplyEntity replyEntity) {

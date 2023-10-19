@@ -11,5 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class ReviewCategoryDTO {
+    private Long reviewCategoryId;
+    private Long reviewId;
     private CategoryDTO categories;
 }
