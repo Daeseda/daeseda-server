@@ -1,13 +1,16 @@
 package laundry.daeseda.service.user;
 
+import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.AuthorityEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.exception.DuplicateUserException;
 import laundry.daeseda.exception.NotFoundUserException;
 import laundry.daeseda.jwt.TokenProvider;
+import laundry.daeseda.repository.user.AddressRepository;
 import laundry.daeseda.repository.user.AuthorityRepository;
 import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.util.SecurityUtil;
@@ -28,6 +31,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -118,6 +122,29 @@ public class UserServiceImpl implements UserService {
             return true;
         else
             return false;
+    }
+
+    @Transactional
+    public boolean settingDefaultAddress(AddressDto addressDto) {
+        AddressEntity address = addressRepository.findById(addressDto.getAddressId()).get();
+        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get()).get();
+
+        if(address.getUser().getUserId().equals(userEntity.getUserId())){
+            UserEntity user = UserEntity.builder()
+                    .userId(userEntity.getUserId())
+                    .userNickname(userEntity.getUserNickname())
+                    .userName(userEntity.getUserName())
+                    .userPhone(userEntity.getUserPhone())
+                    .userEmail(userEntity.getUserEmail())
+                    .userPassword(userEntity.getUserPassword())
+                    .defaultAddress(address)
+                    .activated(true)
+                    .build();
+            userRepository.updateDefaultAddress(address, user.getUserId());
+            return true;
+        }
+
+        return false;
     }
 
     @Transactional

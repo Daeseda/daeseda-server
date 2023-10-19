@@ -2,6 +2,7 @@ package laundry.daeseda.controller;
 
 import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.service.user.AddressService;
+import laundry.daeseda.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,15 @@ import java.util.List;
 public class AddressController {
 
     private final AddressService addressService;
+    private final UserService userService;
+
+    @PostMapping("/setting")
+    public ResponseEntity<String> settingAddress(@RequestBody @Valid AddressDto addressDto) {
+        if(userService.settingDefaultAddress(addressDto)){
+            return ResponseEntity.ok().body(" 기본 배송지 설정 완료 ");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(" 실패 ");
+    }
 
     @PostMapping("/create")
     public ResponseEntity<String> createAddress(@RequestBody @Valid AddressDto addressDto) { //register 호출
