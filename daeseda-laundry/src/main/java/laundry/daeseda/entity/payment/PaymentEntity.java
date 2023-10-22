@@ -1,6 +1,5 @@
-package laundry.daeseda.entity.cash;
+package laundry.daeseda.entity.payment;
 
-import laundry.daeseda.entity.clothes.ClothesEntity;
 import laundry.daeseda.entity.order.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +15,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CashEntity {
+public class PaymentEntity {
 
     @Id
     @Column(name = "cash_id")
