@@ -7,8 +7,10 @@ import laundry.daeseda.entity.payment.PaymentEntity;
 import laundry.daeseda.repository.order.OrderRepository;
 import laundry.daeseda.repository.payment.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
@@ -29,6 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentRepository.save(paymentEntity);
             OrderStatus orderStatus = OrderStatus.COMPLETE;
             orderRepository.updateStatus(orderStatus, paymentDto.getOrder().getOrderId());
+            return true;
         }
         return false;
     }

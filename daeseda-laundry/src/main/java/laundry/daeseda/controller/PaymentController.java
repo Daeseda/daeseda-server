@@ -20,7 +20,7 @@ public class PaymentController {
     @PostMapping("/")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> changeStatus(@RequestBody @Valid PaymentDto paymentDto){
-        System.out.println("OrderController.changeStatus");
+        paymentService.registrationPayment(paymentDto);
         return ResponseEntity.status(HttpStatus.OK).body("등록 완료");
     }
 }
