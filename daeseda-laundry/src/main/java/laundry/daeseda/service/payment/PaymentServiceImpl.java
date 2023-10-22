@@ -1,6 +1,7 @@
 package laundry.daeseda.service.payment;
 
 import laundry.daeseda.constant.OrderStatus;
+import laundry.daeseda.dto.payment.PaymentAllDto;
 import laundry.daeseda.dto.payment.PaymentDto;
 import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.entity.payment.PaymentEntity;
@@ -9,6 +10,8 @@ import laundry.daeseda.repository.payment.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +37,10 @@ public class PaymentServiceImpl implements PaymentService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<PaymentAllDto> getPaymentList() {
+        return null;
     }
 }

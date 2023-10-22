@@ -4,6 +4,7 @@ import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.dto.user.UserUpdateDto;
 import laundry.daeseda.entity.user.UserEntity;
 
 
@@ -13,7 +14,7 @@ public interface UserService {
     UserDto getMyUserWithAuthorities();
     UserDto getUserWithAuthorities(String userEmail);
     int delete();
-    int update(UserDto userDto);
+    int update(UserUpdateDto userDto);
 
     default UserEntity dtoToEntity(UserDto userDto){
         UserEntity entity = UserEntity.builder()

@@ -48,7 +48,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getUserOrderList());
     }
 
-    @PutMapping("/cash")
+    @PatchMapping("/cash")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> changeStatus(@RequestBody @Valid OrderWithdrawDto order){
         System.out.println("OrderController.changeStatus");
