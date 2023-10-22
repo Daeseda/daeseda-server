@@ -3,8 +3,7 @@ package laundry.daeseda.controller;
 import laundry.daeseda.dto.order.OrderAllDto;
 import laundry.daeseda.dto.order.OrderDto;
 import laundry.daeseda.dto.order.OrderFormDto;
-import laundry.daeseda.dto.order.OrderWithdrawDto;
-import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.dto.order.OrderRequestDto;
 import laundry.daeseda.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,8 +36,8 @@ public class OrderController {
 
     @DeleteMapping("/withdraw")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<String> orderWithdraw(@RequestBody @Valid OrderWithdrawDto orderWithdrawDto) {
-        orderService.withdrawOrder(orderWithdrawDto);
+    public ResponseEntity<String> orderWithdraw(@RequestBody @Valid OrderRequestDto orderRequestDto) {
+        orderService.withdrawOrder(orderRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("r");
     }
 
@@ -50,7 +49,7 @@ public class OrderController {
 
     @PatchMapping("/cash")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<String> changeStatus(@RequestBody @Valid OrderWithdrawDto order){
+    public ResponseEntity<String> changeStatus(@RequestBody @Valid OrderRequestDto order){
         System.out.println("OrderController.changeStatus");
         orderService.patchStatus(order);
         return ResponseEntity.status(HttpStatus.OK).body("해줬음");
