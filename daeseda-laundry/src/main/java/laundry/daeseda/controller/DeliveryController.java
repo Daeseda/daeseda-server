@@ -27,8 +27,9 @@ public class DeliveryController {
     @PostMapping("/request")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> requestDelivery(@RequestBody DeliveryDto deliveryDto) {
-        System.out.println("DeliveryController.requestDelivery");
-        deliveryService.requestDelivery(deliveryDto);
-        return ResponseEntity.status(HttpStatus.OK).body("배송 요청이 완료되었습니다");
+        if (deliveryService.requestDelivery(deliveryDto) > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body("배송 요청이 완료되었습니다");
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("등록된 주소가 아닙니다");
     }
 }
