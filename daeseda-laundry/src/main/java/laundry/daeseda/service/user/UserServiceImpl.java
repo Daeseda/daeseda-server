@@ -4,6 +4,7 @@ import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.dto.user.UserUpdateDto;
 import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.AuthorityEntity;
 import laundry.daeseda.entity.user.UserEntity;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Null;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -97,23 +99,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public int update(UserDto userDto) {
-        Long id = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get()).get().getUserId();
-        UserEntity userEntity = UserEntity.builder()
-                .userId(id)
-                .userNickname(userDto.getUserNickname())
-                .userName(userDto.getUserName())
-                .userPhone(userDto.getUserPhone())
-                .userEmail(userDto.getUserEmail())
-                .userPassword(passwordEncoder.encode(userDto.getUserPassword()))
-                .activated(true)
-                .build();
-        if(userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get()) != null){
-            userRepository.save(userEntity);
+    public int update(UserUpdateDto userDto) {
+        UserEntity user = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get()).get();
+
+        if(userDto.getUserName() != null){
+            userRepository.updateUserName(userDto.getUserName(), user.getUserId());
+            return 1;
+        } else if (userDto.getUserNickname() != null) {
+            userRepository.updateUserNickname(userDto.getUserNickname(), user.getUserId());
+            return 1;
+        } else if (userDto.getUserPhone() != null) {
+            userRepository.updateUserPhone(userDto.getUserPhone(), user.getUserId());
             return 1;
         }
-        else
-            return 0;
+        return 0;
     }
 
     @Override

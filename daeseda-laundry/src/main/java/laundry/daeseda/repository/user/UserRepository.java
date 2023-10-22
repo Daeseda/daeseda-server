@@ -22,4 +22,16 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Modifying
     @Query("update UserEntity u SET u.defaultAddress = :address WHERE u.userId = :userId")
     void updateDefaultAddress(AddressEntity address, Long userId);
+
+    @Modifying
+    @Query("update UserEntity u SET u.userName = :userName WHERE u.userId = :userId")
+    void updateUserName(String userName, Long userId);
+
+    @Modifying
+    @Query("update UserEntity u SET u.userNickname = :userNickname WHERE u.userId = :userId")
+    void updateUserNickname(String userNickname, Long userId);
+
+    @Modifying
+    @Query("update UserEntity u SET u.userPhone = :userPhone WHERE u.userId = :userId")
+    void updateUserPhone(String userPhone, Long userId);
 }

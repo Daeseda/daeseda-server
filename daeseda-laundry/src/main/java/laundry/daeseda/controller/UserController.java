@@ -3,6 +3,7 @@ package laundry.daeseda.controller;
 import laundry.daeseda.dto.user.EmailConfirmDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.UserDto;
+import laundry.daeseda.dto.user.UserUpdateDto;
 import laundry.daeseda.entity.mail.MailEntity;
 import laundry.daeseda.service.mail.MailService;
 import laundry.daeseda.service.user.UserService;
@@ -64,18 +65,37 @@ public class UserController {
     }
     // HttpStatus.OK (200) - Get 요청
 
-    @PutMapping("/update")
+    @PatchMapping("/name")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<String> updateUser(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<String> patchUsername(@RequestBody @Valid UserUpdateDto userDto) {
         if (userService.update(userDto) > 0) {
-            userService.signout();
             return ResponseEntity.ok().body("User updated successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
     }
-    // HttpStatus.OK (200)을 반환 - Put 요청(성공)
-    // HttpStatus.NOT_FOUND (404) - Put 요청(실패)
+
+    @PatchMapping("/nickname")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> patchUserNickname(@RequestBody @Valid UserUpdateDto userDto) {
+        if (userService.update(userDto) > 0) {
+            return ResponseEntity.ok().body("User updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+    }
+
+    @PatchMapping("/phone")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> patchUserPhone(@RequestBody @Valid UserUpdateDto userDto) {
+        System.out.println("UserController.patchUserPhone");
+        if (userService.update(userDto) > 0) {
+            return ResponseEntity.ok().body("User updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+    }
+
 
     @DeleteMapping("/delete")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
