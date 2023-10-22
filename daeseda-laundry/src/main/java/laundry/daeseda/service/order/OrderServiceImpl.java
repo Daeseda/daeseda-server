@@ -7,7 +7,7 @@ import laundry.daeseda.dto.clothes.ClothesDTO;
 import laundry.daeseda.dto.order.OrderAllDto;
 import laundry.daeseda.dto.order.OrderDto;
 import laundry.daeseda.dto.order.OrderFormDto;
-import laundry.daeseda.dto.order.OrderWithdrawDto;
+import laundry.daeseda.dto.order.OrderRequestDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.entity.clothes.ClothesEntity;
 import laundry.daeseda.entity.order.ClothesCountEntity;
@@ -94,8 +94,8 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public void withdrawOrder(OrderWithdrawDto orderWithdrawDto) {
-        orderRepository.deleteById(orderWithdrawDto.getOrderId());
+    public void withdrawOrder(OrderRequestDto orderRequestDto) {
+        orderRepository.deleteById(orderRequestDto.getOrderId());
     }
 
     @Override
@@ -148,7 +148,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Transactional
-    public void patchStatus(OrderWithdrawDto orderAllDto) {
+    public void patchStatus(OrderRequestDto orderAllDto) {
         OrderStatus orderStatus = OrderStatus.CASH;
         orderRepository.updateStatus(orderStatus, orderAllDto.getOrderId());
     }

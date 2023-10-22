@@ -1,6 +1,8 @@
 package laundry.daeseda.controller;
 
+import laundry.daeseda.dto.delivery.DeliveryAllDto;
 import laundry.daeseda.dto.delivery.DeliveryDto;
+import laundry.daeseda.dto.order.OrderRequestDto;
 import laundry.daeseda.service.delivery.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,19 +19,30 @@ public class DeliveryController {
 
     private final DeliveryService deliveryService;
 
-    @GetMapping("/tracking-list")
+    @GetMapping("/tracking")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<String> getTracking() {
-        deliveryService.getDeliveryTrackingList();
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("주문 내역이 없습니다");
+    public ResponseEntity<DeliveryAllDto> getTracking(@RequestParam(name = "order") Long orderId) {
+        DeliveryAllDto deliveryAllDto = deliveryService.getDeliveryTrackingHistory(orderId);
+
+        if(deliveryAllDto != null){
+            return ResponseEntity.status(HttpStatus.OK).body(deliveryAllDto);
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     @PostMapping("/request")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<String> requestDelivery(@RequestBody DeliveryDto deliveryDto) {
+    public ResponseEntity<String> requestDelivery(@RequestBody @Valid DeliveryDto deliveryDto) {
         if (deliveryService.requestDelivery(deliveryDto) > 0) {
             return ResponseEntity.status(HttpStatus.OK).body("배송 요청이 완료되었습니다");
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("등록된 주소가 아닙니다");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("등록된 주소가 아니거나 배송 신청 완료된 건입니다");
+    }
+
+    @PatchMapping("/start")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> changeStatus(@RequestBody @Valid OrderRequestDto order){
+
+        return ResponseEntity.status(HttpStatus.OK).body("해줬음");
     }
 }

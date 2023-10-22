@@ -6,6 +6,7 @@ import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "delivery")
 
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

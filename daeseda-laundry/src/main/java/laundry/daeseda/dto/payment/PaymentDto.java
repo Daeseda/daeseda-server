@@ -1,6 +1,6 @@
 package laundry.daeseda.dto.payment;
 
-import laundry.daeseda.dto.order.OrderWithdrawDto;
+import laundry.daeseda.dto.order.OrderRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class PaymentDto {
 
     @NotNull
-    private OrderWithdrawDto order;
+    private OrderRequestDto order;
 
     private String cardName;
     private String cardNumber;
