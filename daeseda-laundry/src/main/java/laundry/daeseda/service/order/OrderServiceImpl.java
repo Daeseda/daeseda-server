@@ -117,6 +117,9 @@ public class OrderServiceImpl implements OrderService{
             for(ClothesCountEntity clothesCountEntity : clothesCountEntities) {
                 ClothesDTO clothesDTO = ClothesDTO.builder()
                         .clothesId(clothesCountEntity.getClothes().getClothesId())
+                        .clothesName(clothesCountEntity.getClothes().getClothesName())
+                        .clothesPrice(clothesCountEntity.getClothes().getClothesPrice())
+                        .categoryId(clothesCountEntity.getClothes().getCategory().getCategoryId())
                         .build();
                 
                 ClothesCountDto clothesCountDto = ClothesCountDto.builder()
@@ -137,6 +140,7 @@ public class OrderServiceImpl implements OrderService{
                     .washingMethod(orderEntity.getWashingMethod())
                     .pickupDate(orderEntity.getPickupDate())
                     .deliveryDate(orderEntity.getDeliveryDate())
+                    .clothesCount(clothesCountDtoList)
                     .build();
             orderAllDtoList.add(orderAllDto);
         }

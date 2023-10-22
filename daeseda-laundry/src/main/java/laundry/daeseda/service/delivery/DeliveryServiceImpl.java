@@ -36,25 +36,28 @@ public class DeliveryServiceImpl implements DeliveryService{
     }
 
     @Override
-    public void requestDelivery(DeliveryDto deliveryDto) {
+    public int requestDelivery(DeliveryDto deliveryDto) {
         UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        AddressEntity addressEntity = AddressEntity.builder()
-                .addressId(deliveryDto.getAddress().getAddressId())
-                .build();
+        AddressEntity addressEntity = addressRepository.findById(deliveryDto.getAddress().getAddressId()).get();
 
-        OrderEntity orderEntity = OrderEntity.builder()
-                .orderId(deliveryDto.getOrder().getOrderId())
-                .build();
+        if(addressEntity.getUser().getUserId() == userEntity.getUserId()){
+            OrderEntity orderEntity = OrderEntity.builder()
+                    .orderId(deliveryDto.getOrder().getOrderId())
+                    .build();
 
-        DeliveryEntity deliveryEntity = DeliveryEntity.builder()
-                .user(userEntity)
-                .address(addressEntity)
-                .order(orderEntity)
-                .deliveryStatus(DeliveryStatus.READY)
-                .build();
+            DeliveryEntity deliveryEntity = DeliveryEntity.builder()
+                    .user(userEntity)
+                    .address(addressEntity)
+                    .order(orderEntity)
+                    .deliveryStatus(DeliveryStatus.READY)
+                    .build();
 
-        deliveryRepository.save(deliveryEntity);
+            deliveryRepository.save(deliveryEntity);
+            return 1;
+        }
+
+        return 0;
     }
 }
