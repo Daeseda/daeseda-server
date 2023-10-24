@@ -7,4 +7,8 @@ import laundry.daeseda.dto.order.OrderRequestDto;
 public interface DeliveryService {
     DeliveryAllDto getDeliveryTrackingHistory(Long orderId);
     int requestDelivery(DeliveryDto deliveryDto);
+
+    void patchStartStatus(OrderRequestDto order);
+    void patchEndStatus(OrderRequestDto order);
+
 }

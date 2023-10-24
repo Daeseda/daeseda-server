@@ -1,6 +1,7 @@
 package laundry.daeseda.service.delivery;
 
 import laundry.daeseda.constant.DeliveryStatus;
+import laundry.daeseda.constant.OrderStatus;
 import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.delivery.DeliveryAllDto;
 import laundry.daeseda.dto.delivery.DeliveryDto;
@@ -98,5 +99,17 @@ public class DeliveryServiceImpl implements DeliveryService{
         }
 
         return 0;
+    }
+
+    @Transactional
+    public void patchStartStatus(OrderRequestDto order) {
+        DeliveryStatus deliveryStatus = DeliveryStatus.START;
+        deliveryRepository.updateStatus(deliveryStatus, order.getOrderId());
+    }
+
+    @Transactional
+    public void patchEndStatus(OrderRequestDto order) {
+        DeliveryStatus deliveryStatus = DeliveryStatus.END;
+        deliveryRepository.updateStatus(deliveryStatus, order.getOrderId());
     }
 }
