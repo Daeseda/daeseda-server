@@ -190,7 +190,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .rating(reviewEntity.getRating())
                 .reviewContent(reviewEntity.getReviewContent())
                 .regDate(LocalDateTime.now())
-                .modDate(LocalDateTime.now())
                 .build();
         return reviewDTO;
     }

@@ -8,13 +8,13 @@ import lombok.Data;
 import laundry.daeseda.entity.category.CategoryEntity;
 import lombok.NoArgsConstructor;
 
-@ApiModel(value = "의류 생성 정보")
+@ApiModel(value = "의류 정보")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class ClothesDTO {
-    @ApiModelProperty(value = "의류 ID", example = "0")
+    @ApiModelProperty(value = "의류 ID", example = "자동 할당")
     private Long clothesId;
 
     @ApiModelProperty(value = "의류명", example = "검정 셔츠")
