@@ -90,7 +90,6 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public UserDto getMyUserWithAuthorities() {
-        System.out.println(SecurityUtil.getCurrentUsername().get());
         return UserDto.from(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(userRepository::findOneWithAuthoritiesByUserEmail)

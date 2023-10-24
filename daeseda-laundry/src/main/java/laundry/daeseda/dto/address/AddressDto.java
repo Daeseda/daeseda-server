@@ -21,6 +21,7 @@ public class AddressDto {
     private String addressRoad;
     private String addressDetail;
     private String addressZipcode;
+    private boolean defaultAddress;
 
     public static AddressDto from(AddressEntity address) {
         if(address == null)
