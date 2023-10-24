@@ -20,14 +20,14 @@ import java.util.Optional;
 public class ClothesController {
     private final ClothesService clothesService;
 
-    @ApiOperation(value = "의류 전체 목록을 반환하는 메서드")
+    @ApiOperation(value = "의류 전체 목록을 보는 메서드")
     @GetMapping("/list")
     public ResponseEntity<List<ClothesDTO>> getAllClothes() {
         List<ClothesDTO> clothesDTOList = clothesService.getAllClothes();
         return ResponseEntity.ok().body(clothesDTOList);
     }
 
-    @ApiOperation(value = "특정 의류를 반환하는 메서드")
+    @ApiOperation(value = "특정 의류를 보는 메서드")
     @ApiImplicitParam(name = "clothesId", value = "의류 ID")
     @GetMapping("/{clothesId}")
     public ResponseEntity<ClothesDTO> getClothes(@PathVariable Long clothesId) {

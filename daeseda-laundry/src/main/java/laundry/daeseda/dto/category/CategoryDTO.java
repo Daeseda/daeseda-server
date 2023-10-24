@@ -7,13 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@ApiModel(value = "카테고리 생성 정보")
+@ApiModel(value = "카테고리 정보")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class CategoryDTO {
-    @ApiModelProperty(value = "카테고리 ID", example = "0")
+    @ApiModelProperty(value = "카테고리 ID", example = "자동 할당")
     private Long categoryId;
 
     @ApiModelProperty(value = "카테고리명", example = "와이셔츠")

@@ -1,5 +1,7 @@
 package laundry.daeseda.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.service.reply.ReplyService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(tags = {"답글 API 정보를 제공하는 Controller"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/reply")
@@ -16,12 +19,14 @@ public class ReplyController {
 
     private final ReplyService replyService;
 
+    @ApiOperation(value = "답글 전체 목록을 보는 메서드")
     @GetMapping("/list")
     public ResponseEntity<List<ReplyDTO>> getAllReplies() {
         List<ReplyDTO> reply = replyService.getAllReplies();
         return ResponseEntity.ok().body(reply);
     }
 
+    @ApiOperation(value = "특정 댓글을 보는 메서드")
     @GetMapping("/{replyId}")
     public ResponseEntity<ReplyDTO> getReply(@PathVariable Long replyId) {
         ReplyDTO reply = replyService.getReplyById(replyId).orElse(null);
@@ -33,12 +38,14 @@ public class ReplyController {
         }
     }
 
+    @ApiOperation(value = "댓글을 생성하는 메서드")
     @PostMapping("/register")
     public ResponseEntity<Void> registerReply(@RequestBody ReplyDTO replyDTO) {
         replyService.createReply(replyDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @ApiOperation(value = "특정 댓글을 수정하는 메서드")
     @PutMapping("/{replyId}")
     public ResponseEntity<String> updateReply(@RequestBody ReplyDTO replyDTO) {
         if(replyService.updateReply(replyDTO) > 0) {
@@ -49,6 +56,7 @@ public class ReplyController {
         }
     }
 
+    @ApiOperation(value = "특정 댓글을 삭제하는 메서드")
     @DeleteMapping("/{replyId}")
     public ResponseEntity<String> deleteReply(@PathVariable Long replyId) {
         if(replyService.deleteReply(replyId) > 0) {

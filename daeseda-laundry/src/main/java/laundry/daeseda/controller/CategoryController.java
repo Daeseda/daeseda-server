@@ -20,14 +20,14 @@ import java.util.Optional;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @ApiOperation(value = "카테고리 전체 목록을 반환하는 메서드")
+    @ApiOperation(value = "카테고리 전체 목록을 보는 메서드")
     @GetMapping("/list")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categories = categoryService.getAllCategories();
         return ResponseEntity.ok().body(categories);
     }
 
-    @ApiOperation(value = "특정 카테고리를 반환하는 메서드")
+    @ApiOperation(value = "특정 카테고리를 보는 메서드")
     @ApiImplicitParam(name = "categoryId", value = "카테고리 ID")
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryDTO> getCategory(@PathVariable Long categoryId) {
