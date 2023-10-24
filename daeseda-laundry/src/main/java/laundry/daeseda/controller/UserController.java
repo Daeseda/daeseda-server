@@ -1,5 +1,7 @@
 package laundry.daeseda.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import laundry.daeseda.dto.user.EmailConfirmDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.UserDto;
@@ -21,6 +23,7 @@ import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api(tags = {"User API"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
@@ -31,7 +34,7 @@ public class UserController {
     private final MailService mailService;
     private final RedisTemplate<String, Object> redisTemplate;
 
-
+    @ApiOperation(value = "get signup user-form", notes = "회원가입 시 필요한 목록 불러오기")
     @GetMapping("/signup")
     public ResponseEntity<List<String>> getSignup() { //register 호출
         String result = "userNickname userName userPhone userEmail userPassword";
@@ -44,6 +47,7 @@ public class UserController {
     }
     // HttpStatus.OK (200) - Get 요청
 
+    @ApiOperation(value = "request signup user", notes = "회원가입 요청")
     @PostMapping("/signup")
     public ResponseEntity<String> signupUser(@RequestBody @Valid UserDto userDto) { //register 호출
         userService.signup(userDto);
@@ -51,6 +55,7 @@ public class UserController {
     }
     // HttpStatus.CREATED (201), HttpStatus.OK (200) - Post 요청
 
+    @ApiOperation(value = "request logout user", notes = "로그아웃 요청 및 redis 로그인 정보 삭제")
     @PostMapping("/logout")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> logout() {
@@ -58,6 +63,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
+    @ApiOperation(value = "get user-info", notes = "회원 정보 불러오기")
     @GetMapping("/myInfo")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<UserDto> getMyUserInfo() {
@@ -65,6 +71,7 @@ public class UserController {
     }
     // HttpStatus.OK (200) - Get 요청
 
+    @ApiOperation(value = "update user-name", notes = "회원 이름 변경")
     @PatchMapping("/name")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> patchUsername(@RequestBody @Valid UserUpdateDto userDto) {
@@ -75,6 +82,7 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "update user-nickname", notes = "회원 닉네임 변경")
     @PatchMapping("/nickname")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> patchUserNickname(@RequestBody @Valid UserUpdateDto userDto) {
@@ -85,6 +93,7 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "update user-phone", notes = "회원 전화번호 변경")
     @PatchMapping("/phone")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> patchUserPhone(@RequestBody @Valid UserUpdateDto userDto) {
@@ -97,6 +106,7 @@ public class UserController {
     }
 
 
+    @ApiOperation(value = "update user-delete", notes = "회원 탈퇴")
     @DeleteMapping("/delete")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> deleteUser() {
@@ -110,6 +120,7 @@ public class UserController {
     // HttpStatus.NO_CONTENT (204) - Delete 요청(성공)
     // HttpStatus.NOT_FOUND (404) - Delete 요청(실패)
 
+    @ApiOperation(value = "request email-authentication", notes = "이메일 인증")
     @ResponseBody
     @PostMapping("/mailAuthentication")
     public ResponseEntity<String> mailAuthentication(@RequestBody EmailDto emailDto) throws Exception {
@@ -126,6 +137,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("잘못된 형식입니다.");
     }
 
+    @ApiOperation(value = "request authentication-confirm", notes = "이메일 인증 확인")
     @ResponseBody
     @PostMapping("/mailConfirm")
     public ResponseEntity<String> mailConfirm(@RequestBody EmailConfirmDto emailConfirmDto) throws Exception {

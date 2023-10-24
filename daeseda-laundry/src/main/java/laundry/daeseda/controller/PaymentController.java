@@ -1,5 +1,7 @@
 package laundry.daeseda.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import laundry.daeseda.dto.payment.PaymentAllDto;
 import laundry.daeseda.dto.payment.PaymentDto;
 import laundry.daeseda.service.payment.PaymentService;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Api(tags = {"Payment API"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/order/payment")
@@ -19,6 +22,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    @ApiOperation(value = "get pay-list", notes = "전체 결제내역 불러오기(미구현)")
     @GetMapping("/")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<List<PaymentAllDto>> getPayment(){
@@ -26,6 +30,7 @@ public class PaymentController {
 
     }
 
+    @ApiOperation(value = "request payment", notes = "결제 완료 등록 및 주문 상태 결제 완료로 변경")
     @PostMapping("/")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> registrationPayment(@RequestBody @Valid PaymentDto paymentDto){

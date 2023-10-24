@@ -1,5 +1,7 @@
 package laundry.daeseda.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import laundry.daeseda.dto.user.LoginDto;
 import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.jwt.JwtFilter;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Api(tags = {"Login API"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
@@ -28,6 +31,7 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisTemplate<String, Object> redisTemplate;
 
+    @ApiOperation(value = "login", notes = "토큰 생성 및 발급 후 로그인 정보 redis 저장, 로그인")
     @PostMapping("/authenticate")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
 
