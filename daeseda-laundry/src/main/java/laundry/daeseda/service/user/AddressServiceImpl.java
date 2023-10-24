@@ -50,16 +50,25 @@ public class AddressServiceImpl implements AddressService {
 
         // 주소 목록을 AddressDto로 매핑하고 AddressListDto에 추가
         List<AddressDto> addressDtos = new ArrayList<>();
+        boolean isDefault = false;
 
         for (AddressEntity addressEntity : addressEntities) {
+            if(addressEntity.getAddressId() == userEntity.getDefaultAddress().getAddressId())
+                isDefault = true;
+            System.out.println(addressEntity.getAddressId());
+            System.out.println(userEntity.getDefaultAddress().getAddressId());
+
             AddressDto addressDto = AddressDto.builder()
                     .addressId(addressEntity.getAddressId())
                     .addressName(addressEntity.getAddressName())
                     .addressRoad(addressEntity.getAddressRoad())
                     .addressZipcode(addressEntity.getAddressZipcode())
                     .addressDetail(addressEntity.getAddressDetail())
+                    .defaultAddress(isDefault)
                     .build();
             addressDtos.add(addressDto);
+
+            isDefault = false;
         }
 
         return addressDtos;

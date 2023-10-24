@@ -1,6 +1,7 @@
 package laundry.daeseda.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.entity.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class UserDto {
     private String userPassword;
 
     private Set<AuthorityDto> authorityDtoSet;
+    private AddressDto addressDto;
 
     public static UserDto from(UserEntity user) {
         if(user == null)
@@ -43,6 +45,13 @@ public class UserDto {
                 .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
                         .collect(Collectors.toSet()))
+                .addressDto(AddressDto.builder()
+                        .addressId(user.getDefaultAddress().getAddressId())
+                        .addressRoad(user.getDefaultAddress().getAddressRoad())
+                        .addressName(user.getDefaultAddress().getAddressName())
+                        .addressDetail(user.getDefaultAddress().getAddressDetail())
+                        .addressZipcode(user.getDefaultAddress().getAddressZipcode())
+                        .build())
                 .build();
     }
 }
