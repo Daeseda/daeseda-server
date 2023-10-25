@@ -37,6 +37,25 @@ public class UserDto {
         if(user == null)
             return null;
 
+        if(user.getDefaultAddress() != null) {
+            return UserDto.builder()
+                    .userName(user.getUserName())
+                    .userNickname(user.getUserNickname())
+                    .userPhone(user.getUserPhone())
+                    .userEmail(user.getUserEmail())
+                    .authorityDtoSet(user.getAuthorities().stream()
+                            .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
+                            .collect(Collectors.toSet()))
+                    .addressDto(AddressDto.builder()
+                            .addressId(user.getDefaultAddress().getAddressId())
+                            .addressRoad(user.getDefaultAddress().getAddressRoad())
+                            .addressName(user.getDefaultAddress().getAddressName())
+                            .addressDetail(user.getDefaultAddress().getAddressDetail())
+                            .addressZipcode(user.getDefaultAddress().getAddressZipcode())
+                            .build())
+                    .build();
+        }
+
         return UserDto.builder()
                 .userName(user.getUserName())
                 .userNickname(user.getUserNickname())
@@ -45,13 +64,6 @@ public class UserDto {
                 .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
                         .collect(Collectors.toSet()))
-                .addressDto(AddressDto.builder()
-                        .addressId(user.getDefaultAddress().getAddressId())
-                        .addressRoad(user.getDefaultAddress().getAddressRoad())
-                        .addressName(user.getDefaultAddress().getAddressName())
-                        .addressDetail(user.getDefaultAddress().getAddressDetail())
-                        .addressZipcode(user.getDefaultAddress().getAddressZipcode())
-                        .build())
                 .build();
     }
 }
