@@ -49,7 +49,7 @@ public class UserEntity {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<AuthorityEntity> authorities;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private AddressEntity defaultAddress;
 
