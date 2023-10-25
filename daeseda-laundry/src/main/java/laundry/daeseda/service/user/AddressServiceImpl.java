@@ -38,6 +38,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressDto> getMyAddressList() {
+
         // 현재 사용자 아이디 가져오기
         String currentUserEmail = SecurityUtil.getCurrentUsername().get();
 
@@ -50,13 +51,12 @@ public class AddressServiceImpl implements AddressService {
 
         // 주소 목록을 AddressDto로 매핑하고 AddressListDto에 추가
         List<AddressDto> addressDtos = new ArrayList<>();
-        boolean isDefault = false;
 
+        // 기본 배송지 설정
+        boolean isDefault = false;
         for (AddressEntity addressEntity : addressEntities) {
-            if(addressEntity.getAddressId() == userEntity.getDefaultAddress().getAddressId())
+            if(userEntity.getDefaultAddress() != null && addressEntity.getAddressId() == userEntity.getDefaultAddress().getAddressId())
                 isDefault = true;
-            System.out.println(addressEntity.getAddressId());
-            System.out.println(userEntity.getDefaultAddress().getAddressId());
 
             AddressDto addressDto = AddressDto.builder()
                     .addressId(addressEntity.getAddressId())
