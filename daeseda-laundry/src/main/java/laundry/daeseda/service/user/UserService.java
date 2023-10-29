@@ -15,6 +15,7 @@ public interface UserService {
     UserDto getUserWithAuthorities(String userEmail);
     int delete();
     int update(UserUpdateDto userDto);
+    UserEntity getUserEntity();
 
     default UserEntity dtoToEntity(UserDto userDto){
         UserEntity entity = UserEntity.builder()
