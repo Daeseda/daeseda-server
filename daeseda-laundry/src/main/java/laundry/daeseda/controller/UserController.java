@@ -97,7 +97,6 @@ public class UserController {
     @PatchMapping("/phone")
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> patchUserPhone(@RequestBody @Valid UserUpdateDto userDto) {
-        System.out.println("UserController.patchUserPhone");
         if (userService.update(userDto) > 0) {
             return ResponseEntity.ok().body("User updated successfully.");
         } else {

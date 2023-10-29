@@ -158,7 +158,6 @@ public class UserServiceImpl implements UserService {
     public int delete() {
         try {
             Optional<UserEntity> user = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get());
-            System.out.println(user.get().getUserId());
             userRepository.deleteById(user.get().getUserId());
             return 1;
         } catch (EmptyResultDataAccessException e) {
