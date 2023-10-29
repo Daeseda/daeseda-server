@@ -9,8 +9,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class DeliveryDto {
 
-    @NotNull
-    private AddressDto address;
-
     private OrderAllDto order;
+
 }

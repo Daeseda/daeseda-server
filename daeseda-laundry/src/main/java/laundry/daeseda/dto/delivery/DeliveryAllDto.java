@@ -12,7 +12,7 @@ import lombok.Getter;
 @Builder
 public class DeliveryAllDto {
 
-    private AddressDto address;
+    private String address;
     private UserUpdateDto user;
     private OrderAllDto order;
     private DeliveryStatus deliveryStatus;

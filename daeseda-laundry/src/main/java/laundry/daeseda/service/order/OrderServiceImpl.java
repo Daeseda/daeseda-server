@@ -21,6 +21,7 @@ import laundry.daeseda.repository.user.AddressRepository;
 import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.service.clothes.ClothesService;
 import laundry.daeseda.service.user.AddressService;
+import laundry.daeseda.service.user.UserService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class OrderServiceImpl implements OrderService{
     private final AddressService addressService;
     private final ClothesService clothesService;
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AddressRepository addressRepository;
     private final OrderClothesRepository orderClothesRepository;
     private final ClothesRepository clothesRepository;
@@ -54,16 +55,16 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     public void requestOrder(OrderDto orderDto) {
 
-        String currentUserEmail = SecurityUtil.getCurrentUsername().get();
-        UserEntity currentUser = userRepository.findByUserEmail(currentUserEmail).orElse(null);
+        UserEntity user = userService.getUserEntity();
 
-        if (currentUser != null) {
-            AddressEntity address = addressRepository.findById(orderDto.getAddress().getAddressId())
+        if (user != null) {
+            AddressEntity addressEntity = addressRepository.findById(orderDto.getAddress().getAddressId())
                     .orElseThrow(() -> new EntityNotFoundException("주소를 찾을 수 없습니다. ID: " + orderDto.getAddress().getAddressId()));
 
+            String address = addressEntity.getAddressName() + addressEntity.getAddressDetail() + addressEntity.getAddressRoad() + addressEntity.getAddressZipcode();
 
             OrderEntity orderEntity = OrderEntity.builder()
-                    .user(currentUser)
+                    .user(user)
                     .address(address)
                     .deliveryLocation(orderDto.getDeliveryLocation())
                     .totalPrice(orderDto.getTotalPrice())
@@ -72,11 +73,11 @@ public class OrderServiceImpl implements OrderService{
                     .pickupDate(orderDto.getPickupDate())
                     .deliveryDate(orderDto.getDeliveryDate())
                     .build();
+
             orderEntity = orderRepository.save(orderEntity);
 
 
             List<ClothesCountDto> clothesCountDtoList = orderDto.getClothesCount();
-            System.out.println(clothesCountDtoList != null);
             if (clothesCountDtoList != null) {
                 for (ClothesCountDto clothesCountDto : clothesCountDtoList) {
                     ClothesEntity clothesEntity = clothesRepository.findById(clothesCountDto.getClothes().getClothesId())
@@ -106,7 +107,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<OrderAllDto> getUserOrderList() {
       
-        UserEntity userEntity = userRepository.findOneWithAuthoritiesByUserEmail(SecurityUtil.getCurrentUsername().get()).get();
+        UserEntity userEntity = userService.getUserEntity();
       
         List<OrderEntity> orderEntityList = orderRepository.getByUser(userEntity);
         List<OrderAllDto> orderAllDtoList = new ArrayList<>();
@@ -133,7 +134,7 @@ public class OrderServiceImpl implements OrderService{
             OrderAllDto orderAllDto = OrderAllDto.builder()
                     .orderId(orderEntity.getOrderId())
                     .user(UserDto.from(userEntity))
-                    .address(AddressDto.from(orderEntity.getAddress()))
+                    .address(orderEntity.getAddress())
                     .deliveryLocation(orderEntity.getDeliveryLocation())
                     .totalPrice(orderEntity.getTotalPrice())
                     .orderStatus(OrderStatus.ORDER)

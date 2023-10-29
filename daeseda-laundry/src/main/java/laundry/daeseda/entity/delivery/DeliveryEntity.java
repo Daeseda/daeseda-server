@@ -28,9 +28,8 @@ public class DeliveryEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
-    private AddressEntity address;
+    @Column
+    private String address;
 
     @OneToOne
     @JoinColumn(name = "order_id")
