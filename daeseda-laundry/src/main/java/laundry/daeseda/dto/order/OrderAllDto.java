@@ -16,7 +16,7 @@ public class OrderAllDto {
 
     private Long orderId;
     private UserDto user;
-    private AddressDto address;
+    private String address;
     private List<ClothesCountDto> clothesCount;
 
     private OrderStatus orderStatus;

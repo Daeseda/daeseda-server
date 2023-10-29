@@ -33,9 +33,8 @@ public class OrderEntity extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private AddressEntity address;
+    @Column(updatable = false)
+    private String address;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column

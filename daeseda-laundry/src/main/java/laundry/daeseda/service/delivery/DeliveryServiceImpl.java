@@ -18,6 +18,7 @@ import laundry.daeseda.repository.order.OrderClothesRepository;
 import laundry.daeseda.repository.order.OrderRepository;
 import laundry.daeseda.repository.user.AddressRepository;
 import laundry.daeseda.repository.user.UserRepository;
+import laundry.daeseda.service.user.UserService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,30 +30,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryServiceImpl implements DeliveryService{
 
     private final DeliveryRepository deliveryRepository;
-    private final AddressRepository addressRepository;
     private final OrderRepository orderRepository;
-    private final OrderClothesRepository orderClothesRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public DeliveryAllDto getDeliveryTrackingHistory(Long orderId) {
-        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        UserEntity userEntity = userService.getUserEntity();
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         DeliveryEntity deliveryEntity = deliveryRepository.getByOrder(orderEntity);
+
         if(deliveryEntity != null){
             UserUpdateDto userUpdateDto = UserUpdateDto.builder()
                     .userName(userEntity.getUserName())
                     .userNickname(userEntity.getUserNickname())
                     .userPhone(userEntity.getUserPhone())
-                    .build();
-
-            AddressDto addressDto = AddressDto.builder()
-                    .addressId(orderEntity.getAddress().getAddressId())
-                    .addressRoad(orderEntity.getAddress().getAddressRoad())
-                    .addressDetail(orderEntity.getAddress().getAddressDetail())
-                    .addressName(orderEntity.getAddress().getAddressName())
-                    .addressZipcode(orderEntity.getAddress().getAddressZipcode())
                     .build();
 
             OrderAllDto orderAllDto = OrderAllDto.builder()
@@ -61,7 +52,7 @@ public class DeliveryServiceImpl implements DeliveryService{
 
             DeliveryAllDto deliveryAllDto = DeliveryAllDto.builder()
                     .user(userUpdateDto)
-                    .address(addressDto)
+                    .address(orderAllDto.getAddress())
                     .order(orderAllDto)
                     .deliveryStatus(deliveryEntity.getDeliveryStatus())
                     .build();
@@ -79,23 +70,17 @@ public class DeliveryServiceImpl implements DeliveryService{
                 .build();
 
         if(deliveryRepository.getByOrder(orderEntity) == null){
-            AddressEntity addressEntity = addressRepository.findById(deliveryDto.getAddress().getAddressId()).get();
+            UserEntity userEntity = userService.getUserEntity();
 
-            UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
-                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+            DeliveryEntity deliveryEntity = DeliveryEntity.builder()
+                    .user(userEntity)
+                    .address(deliveryDto.getOrder().getAddress())
+                    .order(orderEntity)
+                    .deliveryStatus(DeliveryStatus.READY)
+                    .build();
+            deliveryRepository.save(deliveryEntity);
 
-            if(addressEntity.getUser().getUserId() == userEntity.getUserId()){
-
-                DeliveryEntity deliveryEntity = DeliveryEntity.builder()
-                        .user(userEntity)
-                        .address(addressEntity)
-                        .order(orderEntity)
-                        .deliveryStatus(DeliveryStatus.READY)
-                        .build();
-
-                deliveryRepository.save(deliveryEntity);
-                return 1;
-            }
+            return 1;
         }
 
         return 0;

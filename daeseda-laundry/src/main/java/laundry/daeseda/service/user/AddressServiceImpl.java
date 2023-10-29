@@ -79,9 +79,10 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public int delete(AddressDto addressDto) {
         UserEntity user = userService.getUserEntity();
-
-        if(user.getDefaultAddress().getAddressId().equals(addressDto.getAddressId()))
-            userRepository.initDefaultAddress(user.getUserId());
+        if(user.getDefaultAddress() != null){
+            if(user.getDefaultAddress().getAddressId().equals(addressDto.getAddressId()))
+                userRepository.initDefaultAddress(user.getUserId());
+        }
 
         addressRepository.deleteById(addressDto.getAddressId());
         return 1;

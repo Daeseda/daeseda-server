@@ -117,11 +117,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserEntity() {
-
         String currentUserEmail = SecurityUtil.getCurrentUsername().get();
         UserEntity userEntity = userRepository.findByUserEmail(currentUserEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-
         return userEntity;
     }
 
