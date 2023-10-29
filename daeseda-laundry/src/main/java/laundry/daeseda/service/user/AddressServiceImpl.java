@@ -9,6 +9,7 @@ import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,19 +20,20 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public int createAddress(AddressDto addressDto) {
-        UserEntity userEntity = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        UserEntity user = userService.getUserEntity();
 
         AddressEntity addressEntity = AddressEntity.builder()
                 .addressName(addressDto.getAddressName())
                 .addressRoad(addressDto.getAddressRoad())
                 .addressZipcode(addressDto.getAddressZipcode())
                 .addressDetail(addressDto.getAddressDetail())
-                .user(userEntity)
+                .user(user)
                 .build();
+
         addressRepository.save(addressEntity);
         return 1;
     }
@@ -74,8 +76,13 @@ public class AddressServiceImpl implements AddressService {
         return addressDtos;
     }
 
-    @Override
+    @Transactional
     public int delete(AddressDto addressDto) {
+        UserEntity user = userService.getUserEntity();
+
+        if(user.getDefaultAddress().getAddressId().equals(addressDto.getAddressId()))
+            userRepository.initDefaultAddress(user.getUserId());
+
         addressRepository.deleteById(addressDto.getAddressId());
         return 1;
     }

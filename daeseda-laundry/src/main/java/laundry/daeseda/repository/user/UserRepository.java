@@ -34,4 +34,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Modifying
     @Query("update UserEntity u SET u.userPhone = :userPhone WHERE u.userId = :userId")
     void updateUserPhone(String userPhone, Long userId);
+
+    @Modifying
+    @Query("update UserEntity u SET u.defaultAddress = null WHERE u.userId = :userId")
+    void initDefaultAddress(Long userId);
 }
