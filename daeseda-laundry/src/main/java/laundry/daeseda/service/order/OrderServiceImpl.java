@@ -27,7 +27,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.OrderColumn;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +45,10 @@ public class OrderServiceImpl implements OrderService{
     private final AddressRepository addressRepository;
     private final OrderClothesRepository orderClothesRepository;
     private final ClothesRepository clothesRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
 
     @Transactional
     public OrderFormDto getOrderForm() {
@@ -104,7 +111,7 @@ public class OrderServiceImpl implements OrderService{
 
     }
 
-    @Override
+    @Transactional
     public List<OrderAllDto> getUserOrderList() {
       
         UserEntity userEntity = userService.getUserEntity();
@@ -137,7 +144,7 @@ public class OrderServiceImpl implements OrderService{
                     .address(orderEntity.getAddress())
                     .deliveryLocation(orderEntity.getDeliveryLocation())
                     .totalPrice(orderEntity.getTotalPrice())
-                    .orderStatus(OrderStatus.ORDER)
+                    .orderStatus(orderEntity.getOrderStatus())
                     .washingMethod(orderEntity.getWashingMethod())
                     .pickupDate(orderEntity.getPickupDate())
                     .deliveryDate(orderEntity.getDeliveryDate())
@@ -147,6 +154,7 @@ public class OrderServiceImpl implements OrderService{
         }
         return orderAllDtoList;
     }
+
 
     @Transactional
     public void patchStatus(OrderRequestDto orderAllDto) {
