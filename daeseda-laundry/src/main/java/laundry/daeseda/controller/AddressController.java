@@ -24,6 +24,7 @@ public class AddressController {
     private final UserService userService;
 
     @ApiOperation(value = "request setting-address", notes = "특정 주소 기본 배송지 설정")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/setting")
     public ResponseEntity<String> settingAddress(@RequestBody @Valid AddressDto addressDto) {
         if(userService.settingDefaultAddress(addressDto)){
@@ -33,6 +34,7 @@ public class AddressController {
     }
 
     @ApiOperation(value = "request create-address", notes = "회원 주소 생성")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<String> createAddress(@RequestBody @Valid AddressDto addressDto) { //register 호출
         if (addressService.createAddress(addressDto) > 0) {

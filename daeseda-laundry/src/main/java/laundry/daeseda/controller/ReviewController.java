@@ -11,6 +11,7 @@ import laundry.daeseda.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +44,7 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "리뷰 생성하는 메서드")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<Void> registerReview(@RequestParam("image") MultipartFile image, ReviewDTO reviewDTO, Long orderId) {
         reviewService.createReview(reviewDTO, image, orderId);

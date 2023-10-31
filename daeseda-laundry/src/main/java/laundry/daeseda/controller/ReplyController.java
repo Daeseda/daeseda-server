@@ -7,6 +7,7 @@ import laundry.daeseda.service.reply.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class ReplyController {
     }
 
     @ApiOperation(value = "댓글을 생성하는 메서드")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<Void> registerReply(@RequestBody ReplyDTO replyDTO) {
         replyService.createReply(replyDTO);
