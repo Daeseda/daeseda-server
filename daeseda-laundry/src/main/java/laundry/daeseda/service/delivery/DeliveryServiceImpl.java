@@ -7,6 +7,7 @@ import laundry.daeseda.dto.delivery.DeliveryAllDto;
 import laundry.daeseda.dto.delivery.DeliveryDto;
 import laundry.daeseda.dto.order.OrderAllDto;
 import laundry.daeseda.dto.order.OrderRequestDto;
+import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.dto.user.UserUpdateDto;
 import laundry.daeseda.entity.delivery.DeliveryEntity;
 import laundry.daeseda.entity.order.ClothesCountEntity;
@@ -40,7 +41,8 @@ public class DeliveryServiceImpl implements DeliveryService{
         DeliveryEntity deliveryEntity = deliveryRepository.getByOrder(orderEntity);
 
         if(deliveryEntity != null){
-            UserUpdateDto userUpdateDto = UserUpdateDto.builder()
+            UserDto userDto = UserDto.builder()
+                    .userEmail(userEntity.getUserEmail())
                     .userName(userEntity.getUserName())
                     .userNickname(userEntity.getUserNickname())
                     .userPhone(userEntity.getUserPhone())
@@ -48,11 +50,11 @@ public class DeliveryServiceImpl implements DeliveryService{
 
             OrderAllDto orderAllDto = OrderAllDto.builder()
                     .orderId(orderEntity.getOrderId())
+                    .address(orderEntity.getAddress())
+                    .user(userDto)
                     .build();
 
             DeliveryAllDto deliveryAllDto = DeliveryAllDto.builder()
-                    .user(userUpdateDto)
-                    .address(orderAllDto.getAddress())
                     .order(orderAllDto)
                     .deliveryStatus(deliveryEntity.getDeliveryStatus())
                     .build();
@@ -89,12 +91,14 @@ public class DeliveryServiceImpl implements DeliveryService{
     @Transactional
     public void patchStartStatus(OrderRequestDto order) {
         DeliveryStatus deliveryStatus = DeliveryStatus.START;
-        deliveryRepository.updateStatus(deliveryStatus, order.getOrderId());
+        OrderEntity orderEntity = orderRepository.getById(order.getOrderId());
+        deliveryRepository.updateStatus(deliveryStatus, orderEntity);
     }
 
     @Transactional
     public void patchEndStatus(OrderRequestDto order) {
         DeliveryStatus deliveryStatus = DeliveryStatus.END;
-        deliveryRepository.updateStatus(deliveryStatus, order.getOrderId());
+        OrderEntity orderEntity = orderRepository.getById(order.getOrderId());
+        deliveryRepository.updateStatus(deliveryStatus, orderEntity);
     }
 }
