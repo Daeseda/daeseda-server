@@ -6,6 +6,7 @@ import laundry.daeseda.dto.order.OrderRequestDto;
 import laundry.daeseda.entity.delivery.DeliveryEntity;
 import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.entity.user.UserEntity;
+import org.hibernate.criterion.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,6 @@ public interface DeliveryRepository extends JpaRepository<DeliveryEntity, Long> 
     DeliveryEntity getByOrder(OrderEntity orderEntity);
 
     @Modifying
-    @Query("update DeliveryEntity d SET d.deliveryStatus = :deliveryStatus WHERE d.order = :orderId")
-    void updateStatus(DeliveryStatus deliveryStatus, Long orderId);
+    @Query("update DeliveryEntity d SET d.deliveryStatus = :deliveryStatus WHERE d.order = :order")
+    void updateStatus(DeliveryStatus deliveryStatus, OrderEntity order);
 }

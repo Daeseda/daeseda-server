@@ -12,8 +12,6 @@ import lombok.Getter;
 @Builder
 public class DeliveryAllDto {
 
-    private String address;
-    private UserUpdateDto user;
     private OrderAllDto order;
     private DeliveryStatus deliveryStatus;
 
