@@ -1,21 +1,29 @@
 package laundry.daeseda.service.user;
 
+import laundry.daeseda.controller.BoardController;
 import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.user.EmailDto;
-import laundry.daeseda.dto.user.TokenDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.dto.user.UserUpdateDto;
+import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.AuthorityEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.exception.DuplicateUserException;
 import laundry.daeseda.exception.NotFoundUserException;
-import laundry.daeseda.jwt.TokenProvider;
+import laundry.daeseda.repository.board.BoardRepository;
+import laundry.daeseda.repository.order.OrderClothesRepository;
+import laundry.daeseda.repository.order.OrderRepository;
+import laundry.daeseda.repository.payment.PaymentRepository;
+import laundry.daeseda.repository.reply.ReplyRepository;
+import laundry.daeseda.repository.review.ReviewRepository;
 import laundry.daeseda.repository.user.AddressRepository;
 import laundry.daeseda.repository.user.AuthorityRepository;
 import laundry.daeseda.repository.user.UserRepository;
+import laundry.daeseda.service.payment.PaymentService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,8 +33,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Null;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +42,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
     private final AddressRepository addressRepository;
+    private final OrderRepository orderRepository;
+    private final ReplyRepository replyRepository;
+    private final OrderClothesRepository orderClothesRepository;
+    private final PaymentRepository paymentRepository;
+    private final ReviewRepository reviewRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -158,6 +172,16 @@ public class UserServiceImpl implements UserService {
     public int delete() {
         try {
             Optional<UserEntity> user = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get());
+            List<OrderEntity> order = orderRepository.getByUser(user.get());
+            for (OrderEntity orderEntity : order) {
+                paymentRepository.deleteByOrderId(orderEntity);
+                orderClothesRepository.deleteByOrderId(orderEntity);
+            }
+            orderRepository.deleteByUserId(user.get());
+            replyRepository.deleteByUserId(user.get());
+            reviewRepository.deleteByUserId(user.get());
+            addressRepository.deleteByUserId(user.get());
+            boardRepository.deleteByUserId(user.get());
             userRepository.deleteById(user.get().getUserId());
             return 1;
         } catch (EmptyResultDataAccessException e) {

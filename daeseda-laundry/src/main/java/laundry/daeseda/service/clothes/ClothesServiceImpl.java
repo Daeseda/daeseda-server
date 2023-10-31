@@ -1,8 +1,6 @@
 package laundry.daeseda.service.clothes;
 
-import laundry.daeseda.dto.category.CategoryDTO;
 import laundry.daeseda.dto.clothes.ClothesDTO;
-import laundry.daeseda.entity.category.CategoryEntity;
 import laundry.daeseda.entity.clothes.ClothesEntity;
 import laundry.daeseda.repository.category.CategoryRepository;
 import laundry.daeseda.repository.clothes.ClothesRepository;

@@ -19,4 +19,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     @Modifying
     @Query("update OrderEntity o SET o.orderStatus = :orderStatus WHERE o.orderId = :orderId")
     void updateStatus(OrderStatus orderStatus, Long orderId);
+
+    @Modifying
+    @Query("delete from OrderEntity o WHERE o.user = :user")
+    void deleteByUserId(UserEntity user);
 }

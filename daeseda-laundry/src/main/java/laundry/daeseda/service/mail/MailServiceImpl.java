@@ -79,13 +79,7 @@ public class MailServiceImpl implements MailService{
 
     @Override
     public String sendMessage(String email) throws Exception {
-        MailEntity mailEntity = new MailEntity();
         String verificationCode = generateKey();
-
-        mailEntity.setUserEmail(email);
-        mailEntity.setVerificationCode(verificationCode);
-
-        mailRepository.save(mailEntity);
 
         MimeMessage message = createMessage(email, verificationCode);
         try {

@@ -10,10 +10,8 @@ import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.repository.category.CategoryRepository;
 import laundry.daeseda.repository.order.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 @Service

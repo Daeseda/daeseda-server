@@ -1,7 +1,6 @@
 package laundry.daeseda.service.order;
 
 import laundry.daeseda.constant.OrderStatus;
-import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.clothes.ClothesCountDto;
 import laundry.daeseda.dto.clothes.ClothesDTO;
 import laundry.daeseda.dto.order.OrderAllDto;
@@ -18,18 +17,15 @@ import laundry.daeseda.repository.clothes.ClothesRepository;
 import laundry.daeseda.repository.order.OrderClothesRepository;
 import laundry.daeseda.repository.order.OrderRepository;
 import laundry.daeseda.repository.user.AddressRepository;
-import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.service.clothes.ClothesService;
 import laundry.daeseda.service.user.AddressService;
 import laundry.daeseda.service.user.UserService;
-import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.OrderColumn;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;

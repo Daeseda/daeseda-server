@@ -19,4 +19,8 @@ public interface DeliveryRepository extends JpaRepository<DeliveryEntity, Long> 
     @Modifying
     @Query("update DeliveryEntity d SET d.deliveryStatus = :deliveryStatus WHERE d.order = :order")
     void updateStatus(DeliveryStatus deliveryStatus, OrderEntity order);
+
+    @Modifying
+    @Query("delete from AddressEntity a WHERE a.user = :user")
+    void deleteByUserId(UserEntity user);
 }

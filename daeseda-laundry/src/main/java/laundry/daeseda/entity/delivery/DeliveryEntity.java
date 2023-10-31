@@ -2,7 +2,6 @@ package laundry.daeseda.entity.delivery;
 
 import laundry.daeseda.constant.DeliveryStatus;
 import laundry.daeseda.entity.order.OrderEntity;
-import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

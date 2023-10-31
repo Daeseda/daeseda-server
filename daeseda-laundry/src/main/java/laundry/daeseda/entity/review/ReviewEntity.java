@@ -1,11 +1,9 @@
 package laundry.daeseda.entity.review;
 
 
-import laundry.daeseda.entity.category.CategoryEntity;
 import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

@@ -1,6 +1,5 @@
 package laundry.daeseda.service.notice;
 
-import laundry.daeseda.dto.category.CategoryDTO;
 import laundry.daeseda.dto.notice.NoticeDTO;
 import laundry.daeseda.entity.notice.NoticeEntity;
 

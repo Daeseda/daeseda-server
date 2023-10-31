@@ -1,28 +1,18 @@
 package laundry.daeseda.service.delivery;
 
 import laundry.daeseda.constant.DeliveryStatus;
-import laundry.daeseda.constant.OrderStatus;
-import laundry.daeseda.dto.address.AddressDto;
 import laundry.daeseda.dto.delivery.DeliveryAllDto;
 import laundry.daeseda.dto.delivery.DeliveryDto;
 import laundry.daeseda.dto.order.OrderAllDto;
 import laundry.daeseda.dto.order.OrderRequestDto;
 import laundry.daeseda.dto.user.UserDto;
-import laundry.daeseda.dto.user.UserUpdateDto;
 import laundry.daeseda.entity.delivery.DeliveryEntity;
-import laundry.daeseda.entity.order.ClothesCountEntity;
 import laundry.daeseda.entity.order.OrderEntity;
-import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.repository.delivery.DeliveryRepository;
-import laundry.daeseda.repository.order.OrderClothesRepository;
 import laundry.daeseda.repository.order.OrderRepository;
-import laundry.daeseda.repository.user.AddressRepository;
-import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.service.user.UserService;
-import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
