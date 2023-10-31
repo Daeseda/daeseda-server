@@ -1,22 +1,15 @@
 package laundry.daeseda.service.board;
 
 import laundry.daeseda.dto.board.BoardDTO;
-import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.entity.board.BoardEntity;
-import laundry.daeseda.entity.reply.ReplyEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.repository.board.BoardRepository;
-import laundry.daeseda.repository.reply.ReplyRepository;
 import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.service.reply.ReplyService;
 import laundry.daeseda.service.user.CustomUserDetailsService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 

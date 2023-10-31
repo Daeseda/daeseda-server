@@ -1,8 +1,6 @@
 package laundry.daeseda.service.notice;
 
-import laundry.daeseda.dto.category.CategoryDTO;
 import laundry.daeseda.dto.notice.NoticeDTO;
-import laundry.daeseda.entity.category.CategoryEntity;
 import laundry.daeseda.entity.notice.NoticeEntity;
 import laundry.daeseda.repository.notice.NoticeRepository;
 import lombok.RequiredArgsConstructor;

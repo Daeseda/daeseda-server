@@ -1,8 +1,6 @@
 package laundry.daeseda.service.review;
 
-import laundry.daeseda.dto.board.BoardDTO;
 import laundry.daeseda.dto.review.ImageDTO;
-import laundry.daeseda.entity.board.BoardEntity;
 import laundry.daeseda.entity.review.ImageEntity;
 import laundry.daeseda.repository.review.ImageRepository;
 import lombok.RequiredArgsConstructor;

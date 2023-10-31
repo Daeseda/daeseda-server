@@ -1,6 +1,5 @@
 package laundry.daeseda.service.reply;
 
-import laundry.daeseda.dto.board.BoardDTO;
 import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.entity.board.BoardEntity;
 import laundry.daeseda.entity.reply.ReplyEntity;
@@ -12,9 +11,6 @@ import laundry.daeseda.service.user.CustomUserDetailsService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 

@@ -2,14 +2,11 @@ package laundry.daeseda.entity.order;
 
 import laundry.daeseda.constant.OrderStatus;
 import laundry.daeseda.entity.BaseTimeEntity;
-import laundry.daeseda.entity.clothes.ClothesEntity;
-import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDate;

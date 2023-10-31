@@ -1,6 +1,5 @@
 package laundry.daeseda.service.reply;
 
-import laundry.daeseda.dto.board.BoardDTO;
 import laundry.daeseda.dto.reply.ReplyDTO;
 import laundry.daeseda.entity.reply.ReplyEntity;
 

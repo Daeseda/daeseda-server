@@ -2,11 +2,8 @@ package laundry.daeseda.service.review;
 
 import laundry.daeseda.dto.category.CategoryDTO;
 import laundry.daeseda.dto.category.ReviewCategoryDTO;
-import laundry.daeseda.dto.clothes.ClothesCountDto;
 import laundry.daeseda.dto.review.ReviewDTO;
 import laundry.daeseda.entity.category.CategoryEntity;
-import laundry.daeseda.entity.clothes.ClothesEntity;
-import laundry.daeseda.entity.order.ClothesCountEntity;
 import laundry.daeseda.entity.order.OrderEntity;
 import laundry.daeseda.entity.review.ReviewCategoryEntity;
 import laundry.daeseda.entity.review.ReviewEntity;
@@ -19,19 +16,15 @@ import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.service.category.CategoryService;
 import laundry.daeseda.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

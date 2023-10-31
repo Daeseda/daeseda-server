@@ -6,7 +6,6 @@ import laundry.daeseda.dto.user.EmailConfirmDto;
 import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.dto.user.UserUpdateDto;
-import laundry.daeseda.entity.mail.MailEntity;
 import laundry.daeseda.service.mail.MailService;
 import laundry.daeseda.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +13,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
