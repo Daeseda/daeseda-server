@@ -8,6 +8,7 @@ import laundry.daeseda.service.clothes.ClothesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class ClothesController {
 
     @ApiOperation(value = "의류 생성하는 메서드")
     @ApiImplicitParam(name = "clothesDTO", value = "카테고리 ID, 의류명")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<String> registerClothes(@RequestBody ClothesDTO clothesDTO) {
         clothesService.createClothes(clothesDTO);
@@ -49,6 +51,7 @@ public class ClothesController {
 
     @ApiOperation(value = "특정 의류를 수정하는 메서드")
     @ApiImplicitParam(name = "clothesDTO", value = "의류 ID,카테고리 ID,카테고리명")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PutMapping("/{clothesId}")
     public ResponseEntity<String> updateClothes(@RequestBody ClothesDTO clothesDTO) {
         if(clothesService.updateClothes(clothesDTO) > 0) {
@@ -61,6 +64,7 @@ public class ClothesController {
 
     @ApiOperation(value = "특정 의류를 삭제하는 메서드")
     @ApiImplicitParam(name = "clothesId", value = "의류 ID")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @DeleteMapping("/{clothesId}")
     public ResponseEntity<String> deleteClothes(@PathVariable Long clothesId) {
         if(clothesService.deleteClothes(clothesId) > 0) {

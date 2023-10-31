@@ -8,6 +8,7 @@ import laundry.daeseda.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class CategoryController {
 
     @ApiOperation(value = "카테고리를 생성하는 메서드")
     @ApiImplicitParam(name = "categoryDTO", value = "카테고리명")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<Void> registerCategory(@RequestBody CategoryDTO categoryDTO) {
         categoryService.createCategory(categoryDTO);
@@ -50,6 +52,7 @@ public class CategoryController {
 
     @ApiOperation(value = "특정 카테고리를 수정하는 메서드")
     @ApiImplicitParam(name = "categoryDTO", value = "카테고리 ID, 카테고리명")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PutMapping("/{categoryId}")
     public ResponseEntity<String> updateCategory(@RequestBody CategoryDTO categoryDTO) {
         if(categoryService.updateCategory(categoryDTO) > 0) {
@@ -62,6 +65,7 @@ public class CategoryController {
 
     @ApiOperation(value = "특정 카테고리를 삭제하는 메서드")
     @ApiImplicitParam(name = "categoryId", value = "카테고리 ID")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         if(categoryService.deleteCategory(categoryId) > 0) {
