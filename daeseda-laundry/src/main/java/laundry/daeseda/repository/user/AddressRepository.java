@@ -14,4 +14,6 @@ public interface AddressRepository extends JpaRepository<AddressEntity,Long> {
     @Modifying
     @Query("delete from AddressEntity a WHERE a.user = :user")
     void deleteByUserId(UserEntity user);
+
+    List<AddressEntity> getByUser(UserEntity userEntity);
 }

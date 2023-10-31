@@ -12,7 +12,4 @@ import java.util.List;
 public interface OrderClothesRepository extends JpaRepository<ClothesCountEntity, Long> {
     List<ClothesCountEntity> getByOrder(OrderEntity orderEntity);
 
-    @Modifying
-    @Query("delete from ClothesCountEntity c WHERE c.order = :order")
-    void deleteByOrderId(OrderEntity order);
 }

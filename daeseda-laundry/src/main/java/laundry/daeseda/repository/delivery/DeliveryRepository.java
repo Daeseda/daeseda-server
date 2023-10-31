@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface DeliveryRepository extends JpaRepository<DeliveryEntity, Long> {
-    void getByUser(UserEntity userEntity);
 
     DeliveryEntity getByOrder(OrderEntity orderEntity);
 
@@ -21,6 +20,7 @@ public interface DeliveryRepository extends JpaRepository<DeliveryEntity, Long> 
     void updateStatus(DeliveryStatus deliveryStatus, OrderEntity order);
 
     @Modifying
-    @Query("delete from AddressEntity a WHERE a.user = :user")
-    void deleteByUserId(UserEntity user);
+    @Query("delete from DeliveryEntity d WHERE d.order = :order")
+    void deleteByOrderId(OrderEntity order);
+
 }
