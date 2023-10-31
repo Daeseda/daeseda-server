@@ -6,12 +6,14 @@ import laundry.daeseda.dto.user.EmailDto;
 import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.dto.user.UserUpdateDto;
 import laundry.daeseda.entity.order.OrderEntity;
+import laundry.daeseda.entity.reply.ReplyEntity;
 import laundry.daeseda.entity.user.AddressEntity;
 import laundry.daeseda.entity.user.AuthorityEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.exception.DuplicateUserException;
 import laundry.daeseda.exception.NotFoundUserException;
 import laundry.daeseda.repository.board.BoardRepository;
+import laundry.daeseda.repository.delivery.DeliveryRepository;
 import laundry.daeseda.repository.order.OrderClothesRepository;
 import laundry.daeseda.repository.order.OrderRepository;
 import laundry.daeseda.repository.payment.PaymentRepository;
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService {
     private final AddressRepository addressRepository;
     private final OrderRepository orderRepository;
     private final ReplyRepository replyRepository;
+    private final DeliveryRepository deliveryRepository;
     private final OrderClothesRepository orderClothesRepository;
     private final PaymentRepository paymentRepository;
     private final ReviewRepository reviewRepository;
@@ -161,6 +164,7 @@ public class UserServiceImpl implements UserService {
                     .defaultAddress(address)
                     .activated(true)
                     .build();
+
             userRepository.updateDefaultAddress(address, user.getUserId());
             return true;
         }
@@ -173,16 +177,29 @@ public class UserServiceImpl implements UserService {
         try {
             Optional<UserEntity> user = userRepository.findByUserEmail(SecurityUtil.getCurrentUsername().get());
             List<OrderEntity> order = orderRepository.getByUser(user.get());
+            List<AddressEntity> address = addressRepository.getByUser(user.get());
+            List<ReplyEntity> reply = replyRepository.getByUser(user.get());
+
+            userRepository.updateDefaultAddress(null, user.get().getUserId());
+
             for (OrderEntity orderEntity : order) {
+                deliveryRepository.deleteByOrderId(orderEntity); // 수정 필요 (배송 중일 때 삭제 불가로)
                 paymentRepository.deleteByOrderId(orderEntity);
-                orderClothesRepository.deleteByOrderId(orderEntity);
+                orderRepository.deleteById(orderEntity.getOrderId());
             }
-            orderRepository.deleteByUserId(user.get());
-            replyRepository.deleteByUserId(user.get());
+
+            for (AddressEntity addressEntity : address) {
+                addressRepository.deleteById(addressEntity.getAddressId());
+            }
+
+            for (ReplyEntity replyEntity : reply) {
+                replyRepository.deleteById(replyEntity.getReplyId());
+            }
+
             reviewRepository.deleteByUserId(user.get());
-            addressRepository.deleteByUserId(user.get());
             boardRepository.deleteByUserId(user.get());
             userRepository.deleteById(user.get().getUserId());
+
             return 1;
         } catch (EmptyResultDataAccessException e) {
             return 0;
