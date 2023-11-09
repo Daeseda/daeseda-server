@@ -21,6 +21,7 @@
 ---
 ### 폴더 구조 📂
 <img width="128" alt="스크린샷 2023-11-09 오후 4 29 17" src="https://github.com/Daeseda/daeseda-server/assets/56884540/d5ad5bc9-03cf-42f2-8f55-f74e5ce6c52d">
+
 - config : Bean 설정
 - constant : 상태 enum 클래스
 - controller : API 엔드포인트 및 Controller 클래스
