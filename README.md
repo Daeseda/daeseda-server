@@ -21,11 +21,22 @@
 - 🗑 remove: 파일 삭제 작업 수행
 ---
 ### 폴더 구조 📂
+<img width="128" alt="스크린샷 2023-11-09 오후 4 29 17" src="https://github.com/Daeseda/daeseda-server/assets/56884540/d5ad5bc9-03cf-42f2-8f55-f74e5ce6c52d">
+
+- config : Bean 설정
+- constant : 상태 enum 클래스
+- controller : API 엔드포인트 및 Controller 클래스
+- dto : 자바 데이터 전송 객체
+- entity : 데이터베이스 매핑 객체
+- exception : 커스텀 예외처리
+- jwt : Json Web Token 생성 및 처리
+- repository : 데이터베이스 접근 인터페이스
+- service : 데이터 처리 클래스 및 인터페이스
+- util : 보안 기능
 
 
 ### 네이밍 컨벤션 📝
-- 1
-- 2
+- camelCase
 ---
 ### 기타 📌
 - 1
