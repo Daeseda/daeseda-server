@@ -35,6 +35,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -138,6 +139,22 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByUserEmail(currentUserEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         return userEntity;
+    }
+
+    @Override
+    public List<UserDto> getUserList() {
+        List<UserEntity> userEntityList = userRepository.findAll();
+        List<UserDto> userDtoList = new ArrayList<>();
+        for(UserEntity user : userEntityList) {
+            UserDto userDto = UserDto.builder()
+                    .userEmail(user.getUserEmail())
+                    .userNickname(user.getUserNickname())
+                    .userName(user.getUserName())
+                    .userPhone(user.getUserPhone())
+                    .build();
+            userDtoList.add(userDto);
+        }
+        return userDtoList;
     }
 
     @Override

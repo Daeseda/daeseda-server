@@ -5,6 +5,7 @@ import laundry.daeseda.entity.user.AuthorityEntity;
 import laundry.daeseda.entity.user.UserEntity;
 import laundry.daeseda.exception.DuplicateUserException;
 import laundry.daeseda.perf.CompareTimer;
+import laundry.daeseda.repository.user.UserRepository;
 import laundry.daeseda.service.user.UserService;;
 
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 @SpringBootTest
 public class UserTest {
@@ -21,8 +24,11 @@ public class UserTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
-    public void signupUser() {
+    public void signupUser() { // rangeClosed 구간만큼 user 생성
         CompareTimer timer = new CompareTimer();
         IntStream.rangeClosed(0, 10)
                 .forEach(i -> {
@@ -43,4 +49,26 @@ public class UserTest {
                 });
     }
 
+    @Test
+    public void findAllUserEntity() { // 모든 user 조회 (id, 이름)
+        List<UserEntity> userEntityList = userRepository.findAll();
+        for(UserEntity userEntity : userEntityList) {
+            System.out.println("유저 id = "+userEntity.getUserId() + " 유저 이름 = " + userEntity.getUserName());
+        }
+    }
+
+    @Test
+    public void deleteByUserId() { // rangeClosed 구간만큼 유저 삭제
+        LongStream.rangeClosed(13, 23)
+                .forEach(i -> userRepository.deleteById(i));
+    }
+
+    @Test
+    public void findAllUserDto() {
+        List<UserDto> userDtos = userService.getUserList();
+        for(UserDto userDto : userDtos) {
+            System.out.println(userDto.getUserEmail());
+            System.out.println(userDto.getUserName());
+        }
+    }
 }

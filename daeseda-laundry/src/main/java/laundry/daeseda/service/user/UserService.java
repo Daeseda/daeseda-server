@@ -7,6 +7,8 @@ import laundry.daeseda.dto.user.UserDto;
 import laundry.daeseda.dto.user.UserUpdateDto;
 import laundry.daeseda.entity.user.UserEntity;
 
+import java.util.List;
+
 
 public interface UserService {
     int signup(UserDto userDto);
@@ -16,6 +18,8 @@ public interface UserService {
     int delete();
     int update(UserUpdateDto userDto);
     UserEntity getUserEntity();
+
+    List<UserDto> getUserList();
 
     default UserEntity dtoToEntity(UserDto userDto){
         UserEntity entity = UserEntity.builder()
