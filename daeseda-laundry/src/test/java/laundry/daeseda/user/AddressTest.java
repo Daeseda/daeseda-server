@@ -1,47 +1,137 @@
-//package laundry.daeseda.user;
-//
-//import laundry.daeseda.dto.address.AddressDto;
-//import laundry.daeseda.entity.user.UserEntity;
-//import laundry.daeseda.service.user.AddressService;
-//import laundry.daeseda.service.user.UserService;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//
-//import java.util.stream.IntStream;
-//import java.util.stream.LongStream;
-//
-//@SpringBootTest
-//public class AddressTest {
-//
-//    @Autowired
-//    private AddressService addressService;
-//
-//    @Autowired
-//    private UserService userService;
-//
+package laundry.daeseda.user;
+
+import laundry.daeseda.dto.address.AddressDto;
+import laundry.daeseda.entity.user.AddressEntity;
+import laundry.daeseda.entity.user.UserEntity;
+import laundry.daeseda.perf.CompareTimer;
+import laundry.daeseda.repository.user.AddressRepository;
+import laundry.daeseda.repository.user.UserRepository;
+import laundry.daeseda.service.user.AddressService;
+import laundry.daeseda.service.user.AddressServiceImpl;
+import laundry.daeseda.service.user.UserService;
+import laundry.daeseda.util.SecurityUtil;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+
+@SpringBootTest
+public class AddressTest {
+
+    @Mock
+    private AddressRepository addressRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private SecurityUtil securityUtil;
+
+    @InjectMocks
+    private AddressServiceImpl addressService;
+
+    CompareTimer timer = new CompareTimer();
+
+    @Test
+    public void createAddress() {
+        UserEntity user = userRepository.getById(1L);
+        long startTime = System.nanoTime(); // 작업 시작 시간 기록
+
+        LongStream.rangeClosed(1, 10000)
+                .forEach(i -> {
+                    timer.checkNanoTime();
+                    timer.checkCurrentTimeMills();
+                    AddressEntity addressEntity = AddressEntity.builder()
+                            .addressId(i)
+                            .addressZipcode("testzip"+i)
+                            .addressDetail("testDetail"+i)
+                            .addressName("testName"+i)
+                            .addressRoad("testRoad"+i)
+                            .user(user)
+                            .build();
+                    addressRepository.save(addressEntity);
+                });
+
+        long endTime = System.nanoTime(); // 작업 종료 시간 기록
+        double elapsedTime = (endTime - startTime) / 1000000.0; // 밀리초로 변환
+
+        System.out.println("총 소요 시간: " + elapsedTime + " ms");
+    } // 총 소요 시간: 33675.183667 ms / 총 소요 시간: 34762.935709 ms
+
 //    @Test
 //    public void createAddress() {
-//        UserService userService = Mockito.mock(UserService.class);
+//        UserEntity user = userRepository.getById(1L);
+//        long startTime = System.nanoTime(); // 작업 시작 시간 기록
+//        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 //
-//        UserEntity mockUser = UserEntity.builder()
-//                .userId(1L)
-//                .build(); // 가짜 사용자 객체 생성
-//        Mockito.when(userService.getUserEntity()).thenReturn(mockUser);
-//
-//        LongStream.rangeClosed(1, 10)
-//                .forEach(i -> {
-//                    AddressDto addressDto = AddressDto.builder()
+//        List<CompletableFuture<Void>> futures = LongStream.rangeClosed(1, 10000)
+//                .mapToObj(i -> CompletableFuture.runAsync(() -> {
+//                    timer.checkNanoTime();
+//                    timer.checkCurrentTimeMills();
+//                    AddressEntity addressEntity = AddressEntity.builder()
 //                            .addressId(i)
-//                            .addressName(i + " addressName")
-//                            .addressDetail(i + " addressDetail")
-//                            .addressZipcode(i + "addressZipcode")
-//                            .addressRoad(i + " addressRoad")
+//                            .addressZipcode("testzip" + i)
+//                            .addressDetail("testDetail" + i)
+//                            .addressName("testName" + i)
+//                            .addressRoad("testRoad" + i)
+//                            .user(user)
 //                            .build();
-//                    addressService.createAddress(addressDto);
+//                    addressRepository.save(addressEntity);
+//                }, executorService))
+//                .collect(Collectors.toList());
+//
+//        // CompletableFuture 리스트의 모든 작업이 완료될 때까지 기다림
+//        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+//
+//        long endTime = System.nanoTime(); // 작업 종료 시간 기록
+//        double elapsedTime = (endTime - startTime) / 1000000.0; // 밀리초로 변환
+//
+//        System.out.println("총 소요 시간: " + elapsedTime + " ms");
+//    } // 총 소요 시간: 30077.181917 ms
+
+//    @Test
+//    public void createAddress() {
+//        UserEntity user = userRepository.getById(1L);
+//
+//        long startTime = System.nanoTime(); // 작업 시작 시간 기록
+//        LongStream.rangeClosed(1, 10000)
+//                .parallel() // Parallel Stream으로 변경
+//                .forEach(i -> {
+//                    timer.checkNanoTime();
+//                    timer.checkCurrentTimeMills();
+//                    AddressEntity addressEntity = AddressEntity.builder()
+//                            .addressId(i)
+//                            .addressZipcode("testzip" + i)
+//                            .addressDetail("testDetail" + i)
+//                            .addressName("testName" + i)
+//                            .addressRoad("testRoad" + i)
+//                            .user(user)
+//                            .build();
+//                    addressRepository.save(addressEntity);
 //                });
 //
-//    }
-//
-//}
+//        long endTime = System.nanoTime(); // 작업 종료 시간 기록
+//        double elapsedTime = (endTime - startTime) / 1000000.0; // 밀리초로 변환
+//        System.out.println("총 소요 시간: " + elapsedTime + " ms");
+//    } // 총 소요 시간: 29157.81325 ms / 총 소요 시간: 29987.307792 ms / 총 소요 시간: 30340.377125 ms
+
+}
